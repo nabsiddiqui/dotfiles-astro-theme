@@ -50,9 +50,10 @@ const darkThemes = themes.filter(t => t.type === 'dark');
     </div>
     {lightThemes.map(theme => (
       <button 
-        class="theme-option w-full px-4 py-2 text-left font-mono text-sm hover:bg-secondary transition-colors flex items-center gap-3"
+        class="theme-option w-full px-4 py-2 text-left font-mono text-sm transition-colors flex items-center gap-3 hover:opacity-80"
         data-theme={theme.id}
         data-type={theme.type}
+        style="background: transparent;"
       >
         <span class="w-3 h-3 rounded-full border border-border shrink-0" style={`background: ${theme.primary}`}></span>
         <span class="truncate">{theme.name}</span>
@@ -67,9 +68,10 @@ const darkThemes = themes.filter(t => t.type === 'dark');
     </div>
     {darkThemes.map(theme => (
       <button 
-        class="theme-option w-full px-4 py-2 text-left font-mono text-sm hover:bg-secondary transition-colors flex items-center gap-3"
+        class="theme-option w-full px-4 py-2 text-left font-mono text-sm transition-colors flex items-center gap-3 hover:opacity-80"
         data-theme={theme.id}
         data-type={theme.type}
+        style="background: transparent;"
       >
         <span class="w-3 h-3 rounded-full border border-border shrink-0" style={`background: ${theme.primary}`}></span>
         <span class="truncate">{theme.name}</span>
