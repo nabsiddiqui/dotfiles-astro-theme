@@ -4,7 +4,8 @@
 
 [context.production.environment]
   # Enable demo mode for the showcase site
-  ENABLE_DEMO = "true"
+  # Must be PUBLIC_ prefixed for Astro client-side access
+  PUBLIC_ENABLE_DEMO = "true"
 
 [context.deploy-preview.environment]
-  ENABLE_DEMO = "true"
+  PUBLIC_ENABLE_DEMO = "true"

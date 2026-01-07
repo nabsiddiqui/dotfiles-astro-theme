@@ -131,9 +131,9 @@ export const siteConfig = {
   },
 
   // Set to true to show theme switcher for demo purposes
-  // Automatically enabled on Netlify via ENABLE_DEMO env var
+  // Automatically enabled on Netlify via PUBLIC_ENABLE_DEMO env var
   demo: {
-    enabled: import.meta.env.ENABLE_DEMO === 'true' || false,
+    enabled: import.meta.env.PUBLIC_ENABLE_DEMO === 'true' || false,
   },
 };
 
