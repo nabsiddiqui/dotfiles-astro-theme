@@ -1,0 +1,60 @@
+---
+import Layout from '../layouts/Layout.astro';
+import TerminalHeader from '../components/TerminalHeader.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import { siteConfig } from '../config';
+
+// Get projects from config
+const projects = siteConfig.projects.items;
+---
+
+<Layout title={`Projects | ${siteConfig.title}`}>
+  <section class="py-16">
+    <div class="container max-w-6xl mx-auto px-6">
+      <TerminalHeader command="ls ~/projects" size="xl" class="mb-4" />
+      
+      <div class="font-mono text-sm text-muted-foreground mb-10">
+        <span class="terminal-prompt">$</span>
+        <span class="terminal-command ml-2">git status --short</span>
+        <p class="mt-2">Things I've built, maintained, and sometimes abandoned. <span class="text-primary">Open source</span> when possible.</p>
+      </div>
+
+      <!-- 3x3 Grid -->
+      <div class="project-grid">
+        {projects.map(project => (
+          <ProjectCard 
+            name={project.name}
+            description={project.description}
+            tech={project.tech}
+            status={project.status}
+            url={project.url}
+            github={project.github}
+          />
+        ))}
+      </div>
+
+      <!-- Legend -->
+      <div class="mt-10 pt-6 border-t">
+        <p class="text-muted-foreground font-mono text-xs mb-3">Status Legend:</p>
+        <div class="flex flex-wrap gap-4 font-mono text-xs">
+          <div class="flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-green-500"></span>
+            <span class="text-muted-foreground">Active</span>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-blue-500"></span>
+            <span class="text-muted-foreground">Shipped</span>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-yellow-500"></span>
+            <span class="text-muted-foreground">Maintenance</span>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-gray-500"></span>
+            <span class="text-muted-foreground">Archived</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>

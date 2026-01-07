@@ -1,0 +1,70 @@
+---
+interface Props {
+  name: string;
+  description: string;
+  tech: string[];
+  status: 'active' | 'shipped' | 'maintenance' | 'archived';
+  url?: string;
+  github?: string;
+}
+
+const { name, description, tech, status, url, github } = Astro.props;
+
+const statusConfig = {
+  active: { color: 'bg-green-500', label: 'Active' },
+  shipped: { color: 'bg-blue-500', label: 'Shipped' },
+  maintenance: { color: 'bg-yellow-500', label: 'Maintenance' },
+  archived: { color: 'bg-gray-500', label: 'Archived' }
+};
+
+const { color, label } = statusConfig[status];
+---
+
+<article class="bg-card border border-border rounded-lg p-5 h-full flex flex-col hover:border-primary transition-colors group">
+  <!-- Header with name and status -->
+  <div class="flex items-start justify-between gap-3 mb-3">
+    <h3 class="font-mono text-lg font-semibold text-foreground group-hover:text-primary transition-colors">
+      {name}
+    </h3>
+    <div class="flex items-center gap-1.5 shrink-0">
+      <span class={`w-2 h-2 rounded-full ${color}`}></span>
+      <span class="text-xs text-muted-foreground font-mono">{label}</span>
+    </div>
+  </div>
+
+  <!-- Description -->
+  <p class="text-sm text-muted-foreground mb-4 flex-grow font-sans leading-relaxed">
+    {description}
+  </p>
+  
+  <!-- Tech stack -->
+  <div class="flex flex-wrap gap-1.5 mb-4">
+    {tech.slice(0, 4).map(t => (
+      <span class="text-xs font-mono px-2 py-0.5 bg-secondary rounded text-primary">
+        {t}
+      </span>
+    ))}
+    {tech.length > 4 && (
+      <span class="text-xs font-mono px-2 py-0.5 text-muted-foreground">
+        +{tech.length - 4}
+      </span>
+    )}
+  </div>
+
+  <!-- Links -->
+  <div class="flex gap-3 pt-3 border-t border-border font-mono text-sm">
+    {url && (
+      <a href={url} class="text-muted-foreground hover:text-primary transition-colors">
+        [demo]
+      </a>
+    )}
+    {github && (
+      <a href={github} class="text-muted-foreground hover:text-primary transition-colors">
+        [code]
+      </a>
+    )}
+    {!url && !github && (
+      <span class="text-muted-foreground text-xs">No links available</span>
+    )}
+  </div>
+</article>

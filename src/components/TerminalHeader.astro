@@ -1,0 +1,40 @@
+---
+// Terminal-style headers like: $ ls ~/posts
+
+interface Props {
+  command: string;
+  showCursor?: boolean;
+  size?: 'sm' | 'md' | 'lg' | 'xl';
+  class?: string;
+}
+
+const { 
+  command, 
+  showCursor = false, 
+  size = 'lg',
+  class: className = ''
+} = Astro.props;
+
+const sizeClasses = {
+  sm: 'text-lg',
+  md: 'text-2xl',
+  lg: 'text-3xl md:text-4xl',
+  xl: 'text-4xl md:text-5xl'
+};
+---
+
+<div class:list={["terminal-header", sizeClasses[size], className]}>
+  <span class="terminal-prompt">$</span>
+  <span class="terminal-command">{command}</span>
+  {showCursor && <span class="terminal-cursor"></span>}
+</div>
+
+<style>
+  .terminal-header {
+    font-family: 'JetBrains Mono', 'Geist Mono', monospace;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+</style>

@@ -1,0 +1,69 @@
+---
+import Layout from '../layouts/Layout.astro';
+import TerminalHeader from '../components/TerminalHeader.astro';
+import { getCollection } from 'astro:content';
+import { sortPostsByDate, filterDrafts } from '../lib/utils';
+import { siteConfig } from '../config';
+
+// Get all posts
+const allPosts = await getCollection('blog');
+const posts = sortPostsByDate(filterDrafts(allPosts));
+
+// Group posts by year
+const postsByYear = posts.reduce((acc, post) => {
+  const year = post.data.date.getFullYear();
+  if (!acc[year]) acc[year] = [];
+  acc[year].push(post);
+  return acc;
+}, {} as Record<number, typeof posts>);
+
+const years = Object.keys(postsByYear).map(Number).sort((a, b) => b - a);
+---
+
+<Layout title={`Archives | ${siteConfig.title}`}>
+  <section class="py-16">
+    <div class="container max-w-4xl mx-auto px-6">
+      <TerminalHeader command="history | grep 'post'" size="xl" class="mb-4" />
+      
+      <div class="font-mono text-sm text-muted-foreground mb-10">
+        <span class="terminal-prompt">$</span>
+        <span class="terminal-command ml-2">find ./posts -type f | wc -l</span>
+        <p class="mt-2">{posts.length} posts spanning {years.length} year{years.length !== 1 ? 's' : ''}.</p>
+      </div>
+
+      <div class="space-y-12">
+        {years.map(year => (
+          <div>
+            <h2 class="text-2xl font-bold font-mono mb-6 text-primary">
+              {year}
+            </h2>
+            <ul class="space-y-4">
+              {postsByYear[year].map(post => (
+                <li class="flex items-baseline gap-4">
+                  <time 
+                    datetime={post.data.date.toISOString()}
+                    class="text-sm font-mono text-muted-foreground shrink-0 w-24"
+                  >
+                    {post.data.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                  </time>
+                  <a 
+                    href={`/blog/${post.slug}`}
+                    class="font-mono hover:text-primary transition-colors"
+                  >
+                    {post.data.title}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+
+      <div class="mt-12 pt-6 border-t">
+        <a href="/blog" class="font-mono text-sm text-muted-foreground hover:text-primary transition-colors">
+          ← back to blog
+        </a>
+      </div>
+    </div>
+  </section>
+</Layout>

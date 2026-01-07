@@ -1,0 +1,50 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  date: string;
+  slug: string;
+  tags?: string[];
+}
+
+const { title, description, date, slug, tags = [] } = Astro.props;
+
+const formattedDate = new Date(date).toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric'
+});
+---
+
+<article class="terminal-window group">
+  <div class="terminal-titlebar">
+    <div class="terminal-buttons">
+      <span class="terminal-button terminal-button-red"></span>
+      <span class="terminal-button terminal-button-yellow"></span>
+      <span class="terminal-button terminal-button-green"></span>
+    </div>
+    <span class="text-sm text-primary font-mono ml-4">★ featured</span>
+    <span class="text-sm text-muted-foreground font-mono ml-auto">{formattedDate}</span>
+  </div>
+  <a href={`/blog/${slug}`} class="block terminal-content hover:bg-secondary/30 transition-colors">
+    <div class="mb-3 font-mono">
+      <span class="terminal-prompt">$</span>
+      <span class="terminal-command ml-2">head -n 50 {slug}.md</span>
+    </div>
+    <h3 class="text-xl md:text-2xl font-bold font-mono mb-3 group-hover:text-primary transition-colors">
+      {title}
+    </h3>
+    <p class="text-muted-foreground mb-4">
+      {description}
+    </p>
+    {tags.length > 0 && (
+      <div class="flex flex-wrap gap-2">
+        {tags.map(tag => (
+          <span class="text-xs font-mono px-2 py-1 bg-secondary rounded text-muted-foreground">
+            #{tag}
+          </span>
+        ))}
+      </div>
+    )}
+  </a>
+</article>

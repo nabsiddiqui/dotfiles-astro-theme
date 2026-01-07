@@ -1,0 +1,62 @@
+---
+import Layout from '../layouts/Layout.astro';
+import TerminalHeader from '../components/TerminalHeader.astro';
+import { siteConfig } from '../config';
+---
+
+<Layout title={`404 - Not Found | ${siteConfig.title}`}>
+  <section class="py-16 min-h-[60vh] flex items-center">
+    <div class="container max-w-4xl mx-auto px-6">
+      <div class="terminal-window max-w-2xl mx-auto">
+        <div class="terminal-titlebar">
+          <div class="terminal-buttons">
+            <span class="terminal-button terminal-button-red"></span>
+            <span class="terminal-button terminal-button-yellow"></span>
+            <span class="terminal-button terminal-button-green"></span>
+          </div>
+          <span class="text-sm text-muted-foreground font-mono">error</span>
+        </div>
+        <div class="terminal-content text-center">
+          <div class="mb-4 font-mono">
+            <span class="terminal-prompt">$</span>
+            <span class="terminal-command ml-2">cd {Astro.url.pathname}</span>
+          </div>
+          
+          <div class="text-destructive font-mono text-lg mb-4">
+            bash: cd: {Astro.url.pathname}: No such file or directory
+          </div>
+          
+          <div class="text-8xl font-bold font-mono text-primary mb-6">
+            404
+          </div>
+          
+          <p class="text-muted-foreground mb-6">
+            The page you're looking for doesn't exist or has been moved.
+          </p>
+          
+          <div class="mb-4 font-mono text-sm text-muted-foreground">
+            <span class="terminal-prompt">$</span>
+            <span class="ml-2">Try one of these:</span>
+          </div>
+          
+          <div class="flex flex-wrap justify-center gap-4 font-mono text-sm">
+            <a href="/" class="px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-primary/90 transition-colors">
+              [go home]
+            </a>
+            <a href="/blog" class="px-4 py-2 border border-border rounded hover:bg-card transition-colors">
+              [read blog]
+            </a>
+            <a href="/projects" class="px-4 py-2 border border-border rounded hover:bg-card transition-colors">
+              [view projects]
+            </a>
+          </div>
+          
+          <div class="flex items-center justify-center mt-6">
+            <span class="terminal-prompt">$</span>
+            <span class="terminal-cursor ml-2"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>

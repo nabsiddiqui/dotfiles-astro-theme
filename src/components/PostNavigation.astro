@@ -1,0 +1,47 @@
+---
+interface NavPost {
+  title: string;
+  slug: string;
+}
+
+interface Props {
+  prev?: NavPost;
+  next?: NavPost;
+}
+
+const { prev, next } = Astro.props;
+---
+
+{(prev || next) && (
+  <nav class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-12 pt-8 border-t">
+    {prev ? (
+      <a 
+        href={`/blog/${prev.slug}`}
+        class="terminal-window group hover:border-primary/50 transition-colors"
+      >
+        <div class="terminal-content">
+          <span class="text-xs font-mono text-muted-foreground mb-2 block">← Previous</span>
+          <span class="font-mono group-hover:text-primary transition-colors line-clamp-2">
+            {prev.title}
+          </span>
+        </div>
+      </a>
+    ) : (
+      <div></div>
+    )}
+    
+    {next && (
+      <a 
+        href={`/blog/${next.slug}`}
+        class="terminal-window group hover:border-primary/50 transition-colors md:text-right"
+      >
+        <div class="terminal-content">
+          <span class="text-xs font-mono text-muted-foreground mb-2 block">Next →</span>
+          <span class="font-mono group-hover:text-primary transition-colors line-clamp-2">
+            {next.title}
+          </span>
+        </div>
+      </a>
+    )}
+  </nav>
+)}

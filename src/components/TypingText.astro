@@ -1,0 +1,60 @@
+---
+// Typewriter text animation
+
+interface Props {
+  text: string;
+  speed?: number;
+  delay?: number;
+  class?: string;
+}
+
+const { text, speed = 50, delay = 0, class: className = '' } = Astro.props;
+const id = `typing-${Math.random().toString(36).substr(2, 9)}`;
+---
+
+<span id={id} class:list={["typing-text", className]} data-text={text} data-speed={speed} data-delay={delay}></span>
+
+<script>
+  function initTypingAnimations() {
+    const typingElements = document.querySelectorAll('.typing-text:not([data-initialized])');
+    
+    typingElements.forEach((element) => {
+      const el = element as HTMLElement;
+      el.setAttribute('data-initialized', 'true');
+      
+      const text = el.dataset.text || '';
+      const speed = parseInt(el.dataset.speed || '50', 10);
+      const delay = parseInt(el.dataset.delay || '0', 10);
+      
+      let index = 0;
+      
+      function type() {
+        if (index < text.length) {
+          el.textContent += text.charAt(index);
+          index++;
+          setTimeout(type, speed);
+        }
+      }
+      
+      setTimeout(type, delay);
+    });
+  }
+  
+  // Run on load
+  initTypingAnimations();
+  
+  // Run on view transitions
+  document.addEventListener('astro:after-swap', initTypingAnimations);
+</script>
+
+<style>
+  .typing-text::after {
+    content: '▋';
+    animation: blink 1s infinite;
+  }
+  
+  @keyframes blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+  }
+</style>

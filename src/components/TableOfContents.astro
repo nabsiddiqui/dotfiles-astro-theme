@@ -1,0 +1,50 @@
+---
+interface Heading {
+  depth: number;
+  slug: string;
+  text: string;
+}
+
+interface Props {
+  headings: Heading[];
+}
+
+const { headings } = Astro.props;
+
+// Only include h2 and h3
+const filteredHeadings = headings.filter(h => h.depth >= 2 && h.depth <= 3);
+---
+
+{filteredHeadings.length > 0 && (
+  <nav class="terminal-window mb-8">
+    <div class="terminal-titlebar">
+      <div class="terminal-buttons">
+        <span class="terminal-button terminal-button-red"></span>
+        <span class="terminal-button terminal-button-yellow"></span>
+        <span class="terminal-button terminal-button-green"></span>
+      </div>
+      <span class="text-sm text-muted-foreground font-mono">table of contents</span>
+    </div>
+    <div class="terminal-content">
+      <div class="mb-2 font-mono text-sm">
+        <span class="terminal-prompt">$</span>
+        <span class="terminal-command ml-2">cat toc.txt</span>
+      </div>
+      <ul class="space-y-1 font-mono text-sm">
+        {filteredHeadings.map((heading) => (
+          <li 
+            class:list={[
+              "text-muted-foreground hover:text-primary transition-colors",
+              heading.depth === 3 && "ml-4"
+            ]}
+          >
+            <a href={`#${heading.slug}`}>
+              {heading.depth === 2 ? '→ ' : '  · '}
+              {heading.text}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </nav>
+)}

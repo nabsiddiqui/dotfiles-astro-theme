@@ -1,0 +1,172 @@
+---
+// 14 color themes - light first, then dark
+import { siteConfig } from '../config';
+
+const defaultTheme = siteConfig.theme.defaultTheme;
+
+const themes = [
+  // Light
+  { id: 'clean-white', name: 'Clean White', type: 'light', primary: '#0066cc' },
+  { id: 'catppuccin-latte', name: 'Catppuccin Latte', type: 'light', primary: '#8839ef' },
+  { id: 'rose-pine-dawn', name: 'Rosé Pine Dawn', type: 'light', primary: '#907aa9' },
+  { id: 'nord-light', name: 'Nord Light', type: 'light', primary: '#5e81ac' },
+  { id: 'solarized-light', name: 'Solarized Light', type: 'light', primary: '#268bd2' },
+  { id: 'gruvbox-light', name: 'Gruvbox Light', type: 'light', primary: '#b57614' },
+  { id: 'tokyo-night-light', name: 'Tokyo Night Light', type: 'light', primary: '#34548a' },
+  // Dark
+  { id: 'catppuccin-mocha', name: 'Catppuccin Mocha', type: 'dark', primary: '#cba6f7' },
+  { id: 'rose-pine', name: 'Rosé Pine', type: 'dark', primary: '#c4a7e7' },
+  { id: 'nord', name: 'Nord', type: 'dark', primary: '#88c0d0' },
+  { id: 'dracula', name: 'Dracula', type: 'dark', primary: '#bd93f9' },
+  { id: 'solarized-dark', name: 'Solarized Dark', type: 'dark', primary: '#268bd2' },
+  { id: 'gruvbox-dark', name: 'Gruvbox Dark', type: 'dark', primary: '#fabd2f' },
+  { id: 'tokyo-night', name: 'Tokyo Night', type: 'dark', primary: '#7aa2f7' },
+];
+
+const lightThemes = themes.filter(t => t.type === 'light');
+const darkThemes = themes.filter(t => t.type === 'dark');
+---
+
+<div class="theme-switcher relative" data-default-theme={defaultTheme}>
+  <button 
+    id="theme-toggle"
+    class="flex items-center gap-2 font-mono text-sm text-muted-foreground hover:text-primary transition-colors px-2 py-1 rounded hover:bg-secondary"
+    aria-label="Change theme"
+    aria-haspopup="true"
+  >
+    <svg id="theme-icon-light" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+    </svg>
+    <svg id="theme-icon-dark" class="w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+    </svg>
+    <span id="theme-label">Theme</span>
+  </button>
+  
+  <div id="theme-menu" class="hidden absolute right-0 mt-2 py-2 bg-card border border-border rounded-lg shadow-lg z-50 min-w-[200px] max-h-[400px] overflow-y-auto">
+    <!-- Light Themes First -->
+    <div class="px-3 py-1.5 text-xs font-mono text-foreground uppercase tracking-wide opacity-60">
+      Light Themes
+    </div>
+    {lightThemes.map(theme => (
+      <button 
+        class="theme-option w-full px-4 py-2 text-left font-mono text-sm text-foreground hover:bg-secondary transition-colors flex items-center gap-3"
+        data-theme={theme.id}
+        data-type={theme.type}
+      >
+        <span class="w-3 h-3 rounded-full border border-border shrink-0" style={`background: ${theme.primary}`}></span>
+        <span class="truncate">{theme.name}</span>
+      </button>
+    ))}
+    
+    <hr class="my-2 border-border" />
+    
+    <!-- Dark Themes -->
+    <div class="px-3 py-1.5 text-xs font-mono text-foreground uppercase tracking-wide opacity-60">
+      Dark Themes
+    </div>
+    {darkThemes.map(theme => (
+      <button 
+        class="theme-option w-full px-4 py-2 text-left font-mono text-sm text-foreground hover:bg-secondary transition-colors flex items-center gap-3"
+        data-theme={theme.id}
+        data-type={theme.type}
+      >
+        <span class="w-3 h-3 rounded-full border border-border shrink-0" style={`background: ${theme.primary}`}></span>
+        <span class="truncate">{theme.name}</span>
+      </button>
+    ))}
+  </div>
+</div>
+
+<script>
+  function initThemeSwitcher() {
+    const toggle = document.getElementById('theme-toggle');
+    const menu = document.getElementById('theme-menu');
+    const options = document.querySelectorAll('.theme-option');
+    const iconDark = document.getElementById('theme-icon-dark');
+    const iconLight = document.getElementById('theme-icon-light');
+    const switcher = document.querySelector('.theme-switcher');
+    
+    // Get default theme from data attribute (set from config)
+    const defaultTheme = (switcher as HTMLElement)?.dataset.defaultTheme || 'clean-white';
+    
+    // Load saved theme or use configured default
+    const savedTheme = localStorage.getItem('theme') || defaultTheme;
+    applyTheme(savedTheme);
+    
+    toggle?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      menu?.classList.toggle('hidden');
+    });
+    
+    options.forEach(option => {
+      option.addEventListener('click', () => {
+        const theme = (option as HTMLElement).dataset.theme || defaultTheme;
+        applyTheme(theme);
+        localStorage.setItem('theme', theme);
+        menu?.classList.add('hidden');
+      });
+    });
+    
+    // Close on outside click
+    document.addEventListener('click', (e) => {
+      if (!toggle?.contains(e.target as Node)) {
+        menu?.classList.add('hidden');
+      }
+    });
+    
+    // Close on escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        menu?.classList.add('hidden');
+      }
+    });
+  }
+  
+  function applyTheme(theme: string) {
+    const root = document.documentElement;
+    const iconDark = document.getElementById('theme-icon-dark');
+    const iconLight = document.getElementById('theme-icon-light');
+    
+    // Determine if theme is dark or light
+    const lightThemes = ['clean-white', 'catppuccin-latte', 'rose-pine-dawn', 'nord-light', 'solarized-light', 'gruvbox-light', 'tokyo-night-light'];
+    const isLight = lightThemes.includes(theme);
+    
+    // Remove existing theme classes/attributes
+    root.classList.remove('dark');
+    root.removeAttribute('data-theme');
+    
+    // Apply theme
+    root.setAttribute('data-theme', theme);
+    
+    // For dark themes, also add the .dark class as fallback
+    if (!isLight) {
+      root.classList.add('dark');
+    }
+    
+    // Update icons
+    if (iconDark && iconLight) {
+      if (isLight) {
+        iconDark.classList.add('hidden');
+        iconLight.classList.remove('hidden');
+      } else {
+        iconDark.classList.remove('hidden');
+        iconLight.classList.add('hidden');
+      }
+    }
+    
+    // Update all theme option buttons to show active state
+    document.querySelectorAll('.theme-option').forEach(option => {
+      const optionTheme = (option as HTMLElement).dataset.theme;
+      if (optionTheme === theme) {
+        option.classList.add('text-primary', 'bg-secondary');
+      } else {
+        option.classList.remove('text-primary', 'bg-secondary');
+      }
+    });
+  }
+  
+  // Initialize on page load and on Astro page transitions
+  initThemeSwitcher();
+  document.addEventListener('astro:after-swap', initThemeSwitcher);
+</script>

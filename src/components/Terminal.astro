@@ -1,0 +1,23 @@
+---
+// Terminal window wrapper for use in MDX pages
+// Usage: <Terminal title="~/.config">Your content here</Terminal>
+// Markdown works inside - just write normally
+interface Props {
+  title?: string;
+}
+const { title = "terminal" } = Astro.props;
+---
+
+<div class="terminal-window my-8">
+  <div class="terminal-titlebar">
+    <div class="terminal-buttons">
+      <span class="terminal-button terminal-button-red"></span>
+      <span class="terminal-button terminal-button-yellow"></span>
+      <span class="terminal-button terminal-button-green"></span>
+    </div>
+    <span class="text-sm text-muted-foreground font-mono">{title}</span>
+  </div>
+  <div class="terminal-content prose prose-terminal max-w-none">
+    <slot />
+  </div>
+</div>

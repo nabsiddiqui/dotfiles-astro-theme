@@ -1,0 +1,175 @@
+---
+// Quick nav with Cmd+K
+const navItems = [
+  { label: 'Home', href: '/', shortcut: 'H' },
+  { label: 'About', href: '/about', shortcut: 'A' },
+  { label: 'Blog', href: '/blog', shortcut: 'B' },
+  { label: 'Projects', href: '/projects', shortcut: 'P' },
+  { label: 'Search', href: '/search', shortcut: 'S' },
+  { label: 'Archives', href: '/archives', shortcut: 'R' },
+  { label: 'RSS Feed', href: '/rss.xml', shortcut: 'F' },
+];
+---
+
+<div id="command-palette" class="hidden fixed inset-0 z-[100]">
+  <!-- Backdrop -->
+  <div id="palette-backdrop" class="absolute inset-0 bg-background/80 backdrop-blur-sm"></div>
+  
+  <!-- Modal -->
+  <div class="relative flex items-start justify-center pt-[20vh]">
+    <div class="terminal-window w-full max-w-lg mx-4">
+      <div class="terminal-titlebar">
+        <div class="terminal-buttons">
+          <span class="terminal-button terminal-button-red"></span>
+          <span class="terminal-button terminal-button-yellow"></span>
+          <span class="terminal-button terminal-button-green"></span>
+        </div>
+        <span class="text-sm text-muted-foreground font-mono ml-4">command palette</span>
+        <span class="text-xs text-muted-foreground font-mono ml-auto">esc to close</span>
+      </div>
+      <div class="terminal-content">
+        <div class="flex items-center gap-2 font-mono mb-4 pb-4 border-b border-border">
+          <span class="terminal-prompt">$</span>
+          <input 
+            type="text" 
+            id="palette-input"
+            placeholder="Type a command..."
+            class="flex-1 bg-transparent border-none outline-none text-foreground placeholder:text-muted-foreground/50"
+            autocomplete="off"
+          />
+        </div>
+        
+        <ul id="palette-items" class="space-y-1">
+          {navItems.map(item => (
+            <li>
+              <a 
+                href={item.href}
+                class="palette-item flex items-center justify-between px-3 py-2 rounded hover:bg-secondary transition-colors font-mono text-sm"
+                data-label={item.label.toLowerCase()}
+              >
+                <span class="text-foreground">{item.label}</span>
+                <kbd class="text-xs text-muted-foreground px-2 py-0.5 bg-secondary rounded">
+                  {item.shortcut}
+                </kbd>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Keyboard shortcut hint -->
+<div class="fixed bottom-4 right-4 hidden md:block">
+  <button 
+    id="palette-trigger"
+    class="font-mono text-xs text-muted-foreground hover:text-foreground transition-colors bg-card/80 backdrop-blur px-3 py-2 rounded-lg border border-border"
+  >
+    <kbd>⌘</kbd> + <kbd>K</kbd>
+  </button>
+</div>
+
+<script>
+  function initCommandPalette() {
+    const palette = document.getElementById('command-palette');
+    const backdrop = document.getElementById('palette-backdrop');
+    const input = document.getElementById('palette-input') as HTMLInputElement;
+    const items = document.querySelectorAll('.palette-item');
+    const trigger = document.getElementById('palette-trigger');
+    
+    function openPalette() {
+      palette?.classList.remove('hidden');
+      input?.focus();
+      document.body.style.overflow = 'hidden';
+    }
+    
+    function closePalette() {
+      palette?.classList.add('hidden');
+      if (input) input.value = '';
+      filterItems('');
+      document.body.style.overflow = '';
+    }
+    
+    function filterItems(query: string) {
+      const q = query.toLowerCase();
+      items.forEach(item => {
+        const label = (item as HTMLElement).dataset.label || '';
+        const li = item.parentElement;
+        if (label.includes(q)) {
+          li?.classList.remove('hidden');
+        } else {
+          li?.classList.add('hidden');
+        }
+      });
+    }
+    
+    // Open with Cmd/Ctrl + K
+    document.addEventListener('keydown', (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        if (palette?.classList.contains('hidden')) {
+          openPalette();
+        } else {
+          closePalette();
+        }
+      }
+      
+      // Close with Escape
+      if (e.key === 'Escape') {
+        closePalette();
+      }
+    });
+    
+    // Filter on input
+    input?.addEventListener('input', (e) => {
+      filterItems((e.target as HTMLInputElement).value);
+    });
+    
+    // Close on backdrop click
+    backdrop?.addEventListener('click', closePalette);
+    
+    // Trigger button
+    trigger?.addEventListener('click', openPalette);
+  }
+  
+  initCommandPalette();
+  document.addEventListener('astro:after-swap', initCommandPalette);
+</script>
+
+<style>
+  .terminal-window {
+    background-color: var(--color-card);
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+    overflow: hidden;
+  }
+  
+  .terminal-titlebar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    background-color: var(--color-secondary);
+    border-bottom: 1px solid var(--color-border);
+  }
+  
+  .terminal-buttons {
+    display: flex;
+    gap: 0.5rem;
+  }
+  
+  .terminal-button {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+  }
+  
+  .terminal-button-red { background-color: #ff5f56; }
+  .terminal-button-yellow { background-color: #ffbd2e; }
+  .terminal-button-green { background-color: #27ca40; }
+  
+  .terminal-content {
+    padding: 1rem;
+  }
+</style>

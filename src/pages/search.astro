@@ -1,0 +1,207 @@
+---
+import Layout from '../layouts/Layout.astro';
+import TerminalHeader from '../components/TerminalHeader.astro';
+import { getCollection } from 'astro:content';
+import { filterDrafts, getUniqueTags } from '../lib/utils';
+import { siteConfig } from '../config';
+
+// Get all posts and tags
+const allPosts = await getCollection('blog');
+const posts = filterDrafts(allPosts);
+const tags = getUniqueTags(posts);
+
+// Count posts per tag
+const tagCounts = tags.map(tag => ({
+  tag,
+  count: posts.filter(p => p.data.tags.includes(tag)).length
+})).sort((a, b) => b.count - a.count);
+---
+
+<Layout title={`Search | ${siteConfig.title}`}>
+  <section class="py-16">
+    <div class="container max-w-4xl mx-auto px-6">
+      <TerminalHeader command="grep -ri 'query' ./posts/*" size="xl" class="mb-4" />
+      
+      <div class="font-mono text-sm text-muted-foreground mb-8">
+        <span class="terminal-prompt">$</span>
+        <span class="terminal-command ml-2">find . -type f -name "*.md" | xargs grep -l ""</span>
+        <p class="mt-2">Search through {posts.length} posts.</p>
+      </div>
+
+      <!-- Search Input -->
+      <div class="terminal-window mb-10">
+        <div class="terminal-titlebar">
+          <div class="terminal-buttons">
+            <span class="terminal-button terminal-button-red"></span>
+            <span class="terminal-button terminal-button-yellow"></span>
+            <span class="terminal-button terminal-button-green"></span>
+          </div>
+          <span class="text-sm text-muted-foreground font-mono">search</span>
+        </div>
+        <div class="terminal-content">
+          <div class="flex items-center gap-2 font-mono">
+            <span class="terminal-prompt">$</span>
+            <span class="text-muted-foreground">grep</span>
+            <input 
+              type="text" 
+              id="search-input"
+              placeholder="search query..."
+              class="flex-1 bg-transparent border-none outline-none text-foreground placeholder:text-muted-foreground/50"
+              autocomplete="off"
+            />
+            <span class="terminal-cursor"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Search Results -->
+      <div id="search-results" class="space-y-4 mb-10"></div>
+
+      <!-- No Results Message -->
+      <div id="no-results" class="hidden text-center py-8">
+        <p class="text-muted-foreground font-mono">No posts found matching your query.</p>
+      </div>
+
+      <!-- Default: Browse by Tags -->
+      <div id="browse-tags">
+        <h3 class="text-lg font-mono font-semibold mb-4">Browse by tag:</h3>
+        <div class="flex flex-wrap gap-3">
+          {tagCounts.map(({ tag, count }) => (
+            <a 
+              href={`/tags/${tag}`}
+              class="px-3 py-2 bg-secondary rounded font-mono text-sm text-muted-foreground hover:text-primary transition-colors flex items-center gap-2"
+            >
+              <span>#{tag}</span>
+              <span class="text-xs opacity-60">({count})</span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Search Data -->
+  <script define:vars={{ posts: posts.map(p => ({ 
+    title: p.data.title, 
+    description: p.data.description, 
+    slug: p.slug,
+    tags: p.data.tags,
+    date: p.data.date.toISOString()
+  })) }}>
+    const searchInput = document.getElementById('search-input');
+    const searchResults = document.getElementById('search-results');
+    const noResults = document.getElementById('no-results');
+    const browseTags = document.getElementById('browse-tags');
+
+    function formatDate(dateStr) {
+      return new Date(dateStr).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+      });
+    }
+
+    function search(query) {
+      if (!query.trim()) {
+        searchResults.innerHTML = '';
+        noResults.classList.add('hidden');
+        browseTags.classList.remove('hidden');
+        return;
+      }
+
+      browseTags.classList.add('hidden');
+      const q = query.toLowerCase();
+      
+      const results = posts.filter(post => 
+        post.title.toLowerCase().includes(q) ||
+        post.description.toLowerCase().includes(q) ||
+        post.tags.some(tag => tag.toLowerCase().includes(q))
+      );
+
+      if (results.length === 0) {
+        searchResults.innerHTML = '';
+        noResults.classList.remove('hidden');
+        return;
+      }
+
+      noResults.classList.add('hidden');
+      searchResults.innerHTML = results.map(post => `
+        <article class="terminal-window">
+          <div class="terminal-titlebar">
+            <div class="terminal-buttons">
+              <span class="terminal-button terminal-button-red"></span>
+              <span class="terminal-button terminal-button-yellow"></span>
+              <span class="terminal-button terminal-button-green"></span>
+            </div>
+            <span class="text-sm text-muted-foreground font-mono ml-4">${formatDate(post.date)}</span>
+          </div>
+          <a href="/blog/${post.slug}" class="block terminal-content hover:bg-secondary/30 transition-colors">
+            <h3 class="font-mono font-semibold mb-2 hover:text-primary transition-colors">
+              ${highlightMatch(post.title, query)}
+            </h3>
+            <p class="text-sm text-muted-foreground mb-2">
+              ${highlightMatch(post.description, query)}
+            </p>
+            <div class="flex flex-wrap gap-2">
+              ${post.tags.map(tag => `
+                <span class="text-xs font-mono px-2 py-1 bg-secondary rounded text-muted-foreground">
+                  #${tag}
+                </span>
+              `).join('')}
+            </div>
+          </a>
+        </article>
+      `).join('');
+    }
+
+    function highlightMatch(text, query) {
+      if (!query.trim()) return text;
+      const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+      return text.replace(regex, '<mark class="bg-primary/30 text-foreground rounded px-0.5">$1</mark>');
+    }
+
+    searchInput?.addEventListener('input', (e) => {
+      search(e.target.value);
+    });
+
+    // Focus search on page load
+    searchInput?.focus();
+  </script>
+</Layout>
+
+<style>
+  .terminal-window {
+    background-color: var(--color-card);
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+    overflow: hidden;
+  }
+  
+  .terminal-titlebar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    background-color: var(--color-secondary);
+    border-bottom: 1px solid var(--color-border);
+  }
+  
+  .terminal-buttons {
+    display: flex;
+    gap: 0.5rem;
+  }
+  
+  .terminal-button {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+  }
+  
+  .terminal-button-red { background-color: #ff5f56; }
+  .terminal-button-yellow { background-color: #ffbd2e; }
+  .terminal-button-green { background-color: #27ca40; }
+  
+  .terminal-content {
+    padding: 1.5rem;
+  }
+</style>

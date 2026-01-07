@@ -1,0 +1,34 @@
+---
+interface SocialLink {
+  platform: string;
+  url: string;
+  label?: string;
+}
+
+interface Props {
+  links?: SocialLink[];
+  class?: string;
+}
+
+const defaultLinks: SocialLink[] = [
+  { platform: 'github', url: 'https://github.com', label: 'github' },
+  { platform: 'twitter', url: 'https://twitter.com', label: 'twitter' },
+  { platform: 'linkedin', url: 'https://linkedin.com', label: 'linkedin' },
+  { platform: 'email', url: 'mailto:hello@example.com', label: 'email' },
+];
+
+const { links = defaultLinks, class: className = '' } = Astro.props;
+---
+
+<div class:list={["flex flex-wrap gap-3 font-mono text-sm", className]}>
+  {links.map(link => (
+    <a 
+      href={link.url}
+      class="text-muted-foreground hover:text-primary transition-colors"
+      target={link.url.startsWith('mailto:') ? undefined : '_blank'}
+      rel={link.url.startsWith('mailto:') ? undefined : 'noopener noreferrer'}
+    >
+      [{link.label || link.platform}]
+    </a>
+  ))}
+</div>

@@ -1,0 +1,47 @@
+---
+// Renders pages from src/content/pages/
+import Layout from '../layouts/Layout.astro';
+import TerminalHeader from '../components/TerminalHeader.astro';
+import Terminal from '../components/Terminal.astro';
+import { getCollection } from 'astro:content';
+import { siteConfig } from '../config';
+
+export async function getStaticPaths() {
+  const pages = await getCollection('pages');
+  return pages.map((page) => ({
+    params: { slug: page.slug },
+    props: { page },
+  }));
+}
+
+const { page } = Astro.props;
+const { Content } = await page.render();
+
+// Command displayed in the terminal header
+const commands: Record<string, string> = {
+  about: 'whoami',
+  contact: 'mail -s "Hello"',
+  uses: 'cat ~/.uses',
+  now: 'cat ~/.now',
+  colophon: 'cat ~/.colophon',
+};
+const command = commands[page.slug] || `cat ${page.slug}.md`;
+
+// Components automatically available in MDX
+const components = { Terminal };
+---
+
+<Layout 
+  title={`${page.data.title} | ${siteConfig.title}`}
+  description={page.data.description}
+>
+  <section class="py-16">
+    <div class="container max-w-4xl mx-auto px-6">
+      <TerminalHeader command={command} size="xl" class="mb-10" />
+      
+      <div class="prose prose-terminal max-w-none">
+        <Content components={components} />
+      </div>
+    </div>
+  </section>
+</Layout>

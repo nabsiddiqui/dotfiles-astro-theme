@@ -1,0 +1,685 @@
+/* JetBrains Mono for terminal aesthetic */
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Inter:wght@400;500;600;700&display=swap');
+
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@font-face {
+  font-family: 'Geist';
+  src: url('/fonts/Geist-Variable.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Geist Mono';
+  src: url('/fonts/GeistMono-Variable.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ============================================
+   THEME DEFINITIONS
+   Popular color schemes: Catppuccin, Nord, Dracula, Rose Pine, Solarized
+   ============================================ */
+
+@theme {
+  /* Default Light mode - Clean White (inspired by nabeelsiddiqui.net) */
+  --color-background: #ffffff;
+  --color-foreground: #1a1a1a;
+  --color-card: #f8f8f8;
+  --color-card-foreground: #1a1a1a;
+  --color-popover: #ffffff;
+  --color-popover-foreground: #1a1a1a;
+  --color-primary: #0066cc;
+  --color-primary-foreground: #ffffff;
+  --color-secondary: #f0f0f0;
+  --color-secondary-foreground: #1a1a1a;
+  --color-muted: #e5e5e5;
+  --color-muted-foreground: #666666;
+  --color-accent: #0066cc;
+  --color-accent-foreground: #ffffff;
+  --color-destructive: #dc2626;
+  --color-destructive-foreground: #ffffff;
+  --color-border: #e0e0e0;
+  --color-input: #e0e0e0;
+  --color-ring: #0066cc;
+  
+  /* Terminal-specific colors */
+  --color-terminal-prompt: #22863a;
+  --color-terminal-command: #b08800;
+  --color-terminal-cursor: #dc2626;
+
+  --radius: 0.5rem;
+  
+  /* Font families */
+  --font-sans: 'Inter', 'Geist', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Geist Mono', monospace;
+}
+
+/* Clean White Theme (default - same as @theme base) */
+[data-theme="clean-white"] {
+  --color-background: #ffffff;
+  --color-foreground: #1a1a1a;
+  --color-card: #f8f8f8;
+  --color-card-foreground: #1a1a1a;
+  --color-popover: #ffffff;
+  --color-popover-foreground: #1a1a1a;
+  --color-primary: #0066cc;
+  --color-primary-foreground: #ffffff;
+  --color-secondary: #f0f0f0;
+  --color-secondary-foreground: #1a1a1a;
+  --color-muted: #e5e5e5;
+  --color-muted-foreground: #666666;
+  --color-accent: #0066cc;
+  --color-accent-foreground: #ffffff;
+  --color-destructive: #dc2626;
+  --color-destructive-foreground: #ffffff;
+  --color-border: #e0e0e0;
+  --color-input: #e0e0e0;
+  --color-ring: #0066cc;
+  
+  --color-terminal-prompt: #22863a;
+  --color-terminal-command: #b08800;
+  --color-terminal-cursor: #dc2626;
+}
+
+/* ============================================
+   DARK MODE - Catppuccin Mocha (Default Dark)
+   ============================================ */
+.dark,
+[data-theme="catppuccin-mocha"] {
+  --color-background: #1e1e2e;
+  --color-foreground: #cdd6f4;
+  --color-card: #313244;
+  --color-card-foreground: #cdd6f4;
+  --color-popover: #313244;
+  --color-popover-foreground: #cdd6f4;
+  --color-primary: #cba6f7;
+  --color-primary-foreground: #1e1e2e;
+  --color-secondary: #45475a;
+  --color-secondary-foreground: #cdd6f4;
+  --color-muted: #585b70;
+  --color-muted-foreground: #a6adc8;
+  --color-accent: #f5c2e7;
+  --color-accent-foreground: #1e1e2e;
+  --color-destructive: #f38ba8;
+  --color-destructive-foreground: #1e1e2e;
+  --color-border: #45475a;
+  --color-input: #45475a;
+  --color-ring: #cba6f7;
+  
+  --color-terminal-prompt: #a6e3a1;
+  --color-terminal-command: #f9e2af;
+  --color-terminal-cursor: #f38ba8;
+}
+
+/* Catppuccin Latte (Light) */
+[data-theme="catppuccin-latte"] {
+  --color-background: #eff1f5;
+  --color-foreground: #4c4f69;
+  --color-card: #e6e9ef;
+  --color-card-foreground: #4c4f69;
+  --color-popover: #e6e9ef;
+  --color-popover-foreground: #4c4f69;
+  --color-primary: #8839ef;
+  --color-primary-foreground: #eff1f5;
+  --color-secondary: #dce0e8;
+  --color-secondary-foreground: #4c4f69;
+  --color-muted: #ccd0da;
+  --color-muted-foreground: #6c6f85;
+  --color-accent: #ea76cb;
+  --color-accent-foreground: #4c4f69;
+  --color-destructive: #d20f39;
+  --color-destructive-foreground: #eff1f5;
+  --color-border: #bcc0cc;
+  --color-input: #bcc0cc;
+  --color-ring: #8839ef;
+  
+  --color-terminal-prompt: #40a02b;
+  --color-terminal-command: #df8e1d;
+  --color-terminal-cursor: #d20f39;
+}
+
+/* ============================================
+   ROSE PINE THEMES
+   ============================================ */
+[data-theme="rose-pine"] {
+  --color-background: #191724;
+  --color-foreground: #e0def4;
+  --color-card: #1f1d2e;
+  --color-card-foreground: #e0def4;
+  --color-popover: #1f1d2e;
+  --color-popover-foreground: #e0def4;
+  --color-primary: #c4a7e7;
+  --color-primary-foreground: #191724;
+  --color-secondary: #26233a;
+  --color-secondary-foreground: #e0def4;
+  --color-muted: #6e6a86;
+  --color-muted-foreground: #908caa;
+  --color-accent: #ebbcba;
+  --color-accent-foreground: #191724;
+  --color-destructive: #eb6f92;
+  --color-destructive-foreground: #191724;
+  --color-border: #26233a;
+  --color-input: #26233a;
+  --color-ring: #c4a7e7;
+  
+  --color-terminal-prompt: #9ccfd8;
+  --color-terminal-command: #f6c177;
+  --color-terminal-cursor: #eb6f92;
+}
+
+[data-theme="rose-pine-dawn"] {
+  --color-background: #faf4ed;
+  --color-foreground: #575279;
+  --color-card: #fffaf3;
+  --color-card-foreground: #575279;
+  --color-popover: #fffaf3;
+  --color-popover-foreground: #575279;
+  --color-primary: #907aa9;
+  --color-primary-foreground: #faf4ed;
+  --color-secondary: #f2e9e1;
+  --color-secondary-foreground: #575279;
+  --color-muted: #9893a5;
+  --color-muted-foreground: #797593;
+  --color-accent: #d7827e;
+  --color-accent-foreground: #faf4ed;
+  --color-destructive: #b4637a;
+  --color-destructive-foreground: #faf4ed;
+  --color-border: #dfdad9;
+  --color-input: #dfdad9;
+  --color-ring: #907aa9;
+  
+  --color-terminal-prompt: #56949f;
+  --color-terminal-command: #ea9d34;
+  --color-terminal-cursor: #b4637a;
+}
+
+/* ============================================
+   NORD THEME
+   ============================================ */
+[data-theme="nord"] {
+  --color-background: #2e3440;
+  --color-foreground: #eceff4;
+  --color-card: #3b4252;
+  --color-card-foreground: #eceff4;
+  --color-popover: #3b4252;
+  --color-popover-foreground: #eceff4;
+  --color-primary: #88c0d0;
+  --color-primary-foreground: #2e3440;
+  --color-secondary: #434c5e;
+  --color-secondary-foreground: #eceff4;
+  --color-muted: #4c566a;
+  --color-muted-foreground: #d8dee9;
+  --color-accent: #81a1c1;
+  --color-accent-foreground: #2e3440;
+  --color-destructive: #bf616a;
+  --color-destructive-foreground: #eceff4;
+  --color-border: #4c566a;
+  --color-input: #4c566a;
+  --color-ring: #88c0d0;
+  
+  --color-terminal-prompt: #a3be8c;
+  --color-terminal-command: #ebcb8b;
+  --color-terminal-cursor: #bf616a;
+}
+
+[data-theme="nord-light"] {
+  --color-background: #eceff4;
+  --color-foreground: #2e3440;
+  --color-card: #e5e9f0;
+  --color-card-foreground: #2e3440;
+  --color-popover: #e5e9f0;
+  --color-popover-foreground: #2e3440;
+  --color-primary: #5e81ac;
+  --color-primary-foreground: #eceff4;
+  --color-secondary: #d8dee9;
+  --color-secondary-foreground: #2e3440;
+  --color-muted: #d8dee9;
+  --color-muted-foreground: #4c566a;
+  --color-accent: #81a1c1;
+  --color-accent-foreground: #2e3440;
+  --color-destructive: #bf616a;
+  --color-destructive-foreground: #eceff4;
+  --color-border: #d8dee9;
+  --color-input: #d8dee9;
+  --color-ring: #5e81ac;
+  
+  --color-terminal-prompt: #a3be8c;
+  --color-terminal-command: #d08770;
+  --color-terminal-cursor: #bf616a;
+}
+
+/* ============================================
+   DRACULA THEME
+   ============================================ */
+[data-theme="dracula"] {
+  --color-background: #282a36;
+  --color-foreground: #f8f8f2;
+  --color-card: #44475a;
+  --color-card-foreground: #f8f8f2;
+  --color-popover: #44475a;
+  --color-popover-foreground: #f8f8f2;
+  --color-primary: #bd93f9;
+  --color-primary-foreground: #282a36;
+  --color-secondary: #44475a;
+  --color-secondary-foreground: #f8f8f2;
+  --color-muted: #6272a4;
+  --color-muted-foreground: #f8f8f2;
+  --color-accent: #ff79c6;
+  --color-accent-foreground: #282a36;
+  --color-destructive: #ff5555;
+  --color-destructive-foreground: #f8f8f2;
+  --color-border: #6272a4;
+  --color-input: #6272a4;
+  --color-ring: #bd93f9;
+  
+  --color-terminal-prompt: #50fa7b;
+  --color-terminal-command: #f1fa8c;
+  --color-terminal-cursor: #ff5555;
+}
+
+/* ============================================
+   SOLARIZED THEMES
+   ============================================ */
+[data-theme="solarized-dark"] {
+  --color-background: #002b36;
+  --color-foreground: #839496;
+  --color-card: #073642;
+  --color-card-foreground: #839496;
+  --color-popover: #073642;
+  --color-popover-foreground: #839496;
+  --color-primary: #268bd2;
+  --color-primary-foreground: #fdf6e3;
+  --color-secondary: #073642;
+  --color-secondary-foreground: #93a1a1;
+  --color-muted: #073642;
+  --color-muted-foreground: #657b83;
+  --color-accent: #2aa198;
+  --color-accent-foreground: #fdf6e3;
+  --color-destructive: #dc322f;
+  --color-destructive-foreground: #fdf6e3;
+  --color-border: #586e75;
+  --color-input: #586e75;
+  --color-ring: #268bd2;
+  
+  --color-terminal-prompt: #859900;
+  --color-terminal-command: #b58900;
+  --color-terminal-cursor: #dc322f;
+}
+
+[data-theme="solarized-light"] {
+  --color-background: #fdf6e3;
+  --color-foreground: #657b83;
+  --color-card: #eee8d5;
+  --color-card-foreground: #657b83;
+  --color-popover: #eee8d5;
+  --color-popover-foreground: #657b83;
+  --color-primary: #268bd2;
+  --color-primary-foreground: #fdf6e3;
+  --color-secondary: #eee8d5;
+  --color-secondary-foreground: #586e75;
+  --color-muted: #eee8d5;
+  --color-muted-foreground: #93a1a1;
+  --color-accent: #2aa198;
+  --color-accent-foreground: #fdf6e3;
+  --color-destructive: #dc322f;
+  --color-destructive-foreground: #fdf6e3;
+  --color-border: #93a1a1;
+  --color-input: #93a1a1;
+  --color-ring: #268bd2;
+  
+  --color-terminal-prompt: #859900;
+  --color-terminal-command: #cb4b16;
+  --color-terminal-cursor: #dc322f;
+}
+
+/* ============================================
+   GRUVBOX THEMES
+   ============================================ */
+[data-theme="gruvbox-dark"] {
+  --color-background: #282828;
+  --color-foreground: #ebdbb2;
+  --color-card: #3c3836;
+  --color-card-foreground: #ebdbb2;
+  --color-popover: #3c3836;
+  --color-popover-foreground: #ebdbb2;
+  --color-primary: #fabd2f;
+  --color-primary-foreground: #282828;
+  --color-secondary: #504945;
+  --color-secondary-foreground: #ebdbb2;
+  --color-muted: #665c54;
+  --color-muted-foreground: #a89984;
+  --color-accent: #8ec07c;
+  --color-accent-foreground: #282828;
+  --color-destructive: #fb4934;
+  --color-destructive-foreground: #ebdbb2;
+  --color-border: #504945;
+  --color-input: #504945;
+  --color-ring: #fabd2f;
+  
+  --color-terminal-prompt: #b8bb26;
+  --color-terminal-command: #fabd2f;
+  --color-terminal-cursor: #fb4934;
+}
+
+[data-theme="gruvbox-light"] {
+  --color-background: #fbf1c7;
+  --color-foreground: #3c3836;
+  --color-card: #f2e5bc;
+  --color-card-foreground: #3c3836;
+  --color-popover: #f2e5bc;
+  --color-popover-foreground: #3c3836;
+  --color-primary: #b57614;
+  --color-primary-foreground: #fbf1c7;
+  --color-secondary: #ebdbb2;
+  --color-secondary-foreground: #3c3836;
+  --color-muted: #d5c4a1;
+  --color-muted-foreground: #665c54;
+  --color-accent: #427b58;
+  --color-accent-foreground: #fbf1c7;
+  --color-destructive: #9d0006;
+  --color-destructive-foreground: #fbf1c7;
+  --color-border: #bdae93;
+  --color-input: #bdae93;
+  --color-ring: #b57614;
+  
+  --color-terminal-prompt: #79740e;
+  --color-terminal-command: #b57614;
+  --color-terminal-cursor: #9d0006;
+}
+
+/* ============================================
+   TOKYO NIGHT THEMES
+   ============================================ */
+[data-theme="tokyo-night"] {
+  --color-background: #1a1b26;
+  --color-foreground: #c0caf5;
+  --color-card: #24283b;
+  --color-card-foreground: #c0caf5;
+  --color-popover: #24283b;
+  --color-popover-foreground: #c0caf5;
+  --color-primary: #7aa2f7;
+  --color-primary-foreground: #1a1b26;
+  --color-secondary: #414868;
+  --color-secondary-foreground: #c0caf5;
+  --color-muted: #414868;
+  --color-muted-foreground: #9aa5ce;
+  --color-accent: #bb9af7;
+  --color-accent-foreground: #1a1b26;
+  --color-destructive: #f7768e;
+  --color-destructive-foreground: #1a1b26;
+  --color-border: #414868;
+  --color-input: #414868;
+  --color-ring: #7aa2f7;
+  
+  --color-terminal-prompt: #9ece6a;
+  --color-terminal-command: #e0af68;
+  --color-terminal-cursor: #f7768e;
+}
+
+[data-theme="tokyo-night-light"] {
+  --color-background: #d5d6db;
+  --color-foreground: #343b58;
+  --color-card: #cbccd1;
+  --color-card-foreground: #343b58;
+  --color-popover: #cbccd1;
+  --color-popover-foreground: #343b58;
+  --color-primary: #34548a;
+  --color-primary-foreground: #d5d6db;
+  --color-secondary: #9699a3;
+  --color-secondary-foreground: #343b58;
+  --color-muted: #9699a3;
+  --color-muted-foreground: #565a6e;
+  --color-accent: #5a4a78;
+  --color-accent-foreground: #d5d6db;
+  --color-destructive: #8c4351;
+  --color-destructive-foreground: #d5d6db;
+  --color-border: #9699a3;
+  --color-input: #9699a3;
+  --color-ring: #34548a;
+  
+  --color-terminal-prompt: #485e30;
+  --color-terminal-command: #8f5e15;
+  --color-terminal-cursor: #8c4351;
+}
+
+/* ============================================
+   BASE STYLES
+   ============================================ */
+* {
+  border-color: var(--color-border);
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
+}
+
+mark {
+  background-color: oklch(92% 0.05 150);
+  color: oklch(25% 0.02 150);
+  font-weight: 600;
+  padding: 0.1em 0.2em;
+  border-radius: 0.2em;
+}
+
+/* Terminal aesthetic utilities */
+.font-mono {
+  font-family: var(--font-mono);
+}
+
+.font-sans {
+  font-family: var(--font-sans);
+}
+
+/* All headings use monospace by default */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-mono);
+}
+
+.terminal-header {
+  font-family: var(--font-mono);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.terminal-prompt {
+  color: var(--color-terminal-prompt);
+}
+
+.terminal-command {
+  color: var(--color-terminal-command);
+}
+
+.terminal-cursor {
+  display: inline-block;
+  width: 0.6em;
+  height: 1.2em;
+  background-color: var(--color-terminal-cursor);
+  animation: blink 1s step-end infinite;
+  vertical-align: middle;
+  margin-left: 2px;
+}
+
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+/* Terminal window chrome */
+.terminal-window {
+  background-color: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.terminal-titlebar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background-color: var(--color-secondary);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.terminal-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.terminal-button {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.terminal-button-red { background-color: #ff5f56; }
+.terminal-button-yellow { background-color: #ffbd2e; }
+.terminal-button-green { background-color: #27ca40; }
+
+.terminal-content {
+  padding: 1.5rem;
+  font-family: var(--font-mono);
+}
+
+/* Status bar */
+.status-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  color: var(--color-muted-foreground);
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--color-accent);
+}
+
+.status-dot-red { background-color: #ff5f56; }
+.status-dot-yellow { background-color: #ffbd2e; }
+.status-dot-green { background-color: #27ca40; }
+
+/* ============================================
+   PROSE TYPOGRAPHY - Readable body text!
+   ============================================ */
+.prose {
+  font-family: var(--font-sans);
+  font-size: 1.125rem;
+  line-height: 1.75;
+}
+
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4,
+.prose h5,
+.prose h6 {
+  font-family: var(--font-mono) !important;
+  font-weight: 600;
+}
+
+.prose code,
+.prose pre {
+  font-family: var(--font-mono) !important;
+}
+
+.prose p,
+.prose li,
+.prose blockquote {
+  font-family: var(--font-sans);
+}
+
+/* Ensure good contrast for prose content */
+.prose {
+  --tw-prose-body: var(--color-foreground);
+  --tw-prose-headings: var(--color-foreground);
+  --tw-prose-links: var(--color-primary);
+  --tw-prose-bold: var(--color-foreground);
+  --tw-prose-counters: var(--color-muted-foreground);
+  --tw-prose-bullets: var(--color-muted-foreground);
+  --tw-prose-hr: var(--color-border);
+  --tw-prose-quotes: var(--color-foreground);
+  --tw-prose-quote-borders: var(--color-border);
+  --tw-prose-captions: var(--color-muted-foreground);
+  --tw-prose-code: var(--color-primary);
+  --tw-prose-pre-code: var(--color-foreground);
+  --tw-prose-pre-bg: var(--color-card);
+  --tw-prose-th-borders: var(--color-border);
+  --tw-prose-td-borders: var(--color-border);
+}
+
+/* ============================================
+   PROJECT CARD GRID STYLES
+   ============================================ */
+.project-grid {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 1.5rem;
+}
+
+@media (min-width: 640px) {
+  .project-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .project-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* ============================================
+   BLOG CARD STYLES (Simple, no terminal chrome)
+   ============================================ */
+.blog-card {
+  display: block;
+  padding: 1.5rem 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.blog-card:last-child {
+  border-bottom: none;
+}
+
+.blog-card-date {
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  color: var(--color-muted-foreground);
+}
+
+.blog-card-title {
+  font-family: var(--font-mono);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--color-foreground);
+  margin: 0.5rem 0;
+}
+
+.blog-card:hover .blog-card-title {
+  color: var(--color-primary);
+}
+
+.blog-card-description {
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  color: var(--color-muted-foreground);
+  line-height: 1.6;
+}
+
+.blog-card-arrow {
+  font-family: var(--font-mono);
+  color: var(--color-primary);
+}

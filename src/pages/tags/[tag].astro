@@ -1,0 +1,75 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import TerminalHeader from '../../components/TerminalHeader.astro';
+import BlogCard from '../../components/BlogCard.astro';
+import { getCollection } from 'astro:content';
+import { sortPostsByDate, filterDrafts, getUniqueTags } from '../../lib/utils';
+import { siteConfig } from '../../config';
+
+export async function getStaticPaths() {
+  const allPosts = await getCollection('blog');
+  const posts = filterDrafts(allPosts);
+  const tags = getUniqueTags(posts);
+  
+  return tags.map((tag) => ({
+    params: { tag },
+    props: { 
+      tag,
+      posts: sortPostsByDate(posts.filter(post => post.data.tags.includes(tag)))
+    },
+  }));
+}
+
+const { tag, posts } = Astro.props;
+const allPosts = await getCollection('blog');
+const allTags = getUniqueTags(filterDrafts(allPosts));
+---
+
+<Layout title={`#${tag} | ${siteConfig.title}`}>
+  <section class="py-16">
+    <div class="container max-w-4xl mx-auto px-6">
+      <TerminalHeader command={`grep -rli "${tag}" ./posts/*`} size="xl" class="mb-4" />
+      
+      <div class="font-mono text-sm text-muted-foreground mb-10">
+        <span class="terminal-prompt">$</span>
+        <span class="terminal-command ml-2">grep -c "{tag}" ./posts/* | grep -v ":0$" | wc -l</span>
+        <p class="mt-2">{posts.length} post{posts.length !== 1 ? 's' : ''} tagged with <span class="text-primary">#{tag}</span></p>
+      </div>
+
+      <!-- Posts with this tag -->
+      <div class="grid gap-6 mb-10">
+        {posts.map(post => (
+          <BlogCard 
+            title={post.data.title}
+            description={post.data.description}
+            date={post.data.date.toISOString()}
+            slug={post.slug}
+            tags={post.data.tags}
+          />
+        ))}
+      </div>
+
+      <!-- Other tags -->
+      <div class="pt-6 border-t">
+        <p class="text-muted-foreground font-mono text-xs mb-3">Other tags:</p>
+        <div class="flex flex-wrap gap-2">
+          {allTags.filter(t => t !== tag).map(t => (
+            <a 
+              href={`/tags/${t}`} 
+              class="text-xs font-mono px-2 py-1 bg-secondary rounded text-muted-foreground hover:text-primary transition-colors"
+            >
+              #{t}
+            </a>
+          ))}
+        </div>
+      </div>
+
+      <!-- Back link -->
+      <div class="mt-8">
+        <a href="/blog" class="font-mono text-sm text-muted-foreground hover:text-primary transition-colors">
+          ← back to all posts
+        </a>
+      </div>
+    </div>
+  </section>
+</Layout>

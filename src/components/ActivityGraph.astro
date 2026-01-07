@@ -1,0 +1,101 @@
+---
+// GitHub-style contribution graph
+
+interface Props {
+  data?: Record<string, number>; // date string -> count
+  class?: string;
+}
+
+const { data = {}, class: className = '' } = Astro.props;
+
+// Generate last 52 weeks of dates
+const today = new Date();
+const weeks: Date[][] = [];
+let currentWeek: Date[] = [];
+
+for (let i = 364; i >= 0; i--) {
+  const date = new Date(today);
+  date.setDate(date.getDate() - i);
+  
+  if (date.getDay() === 0 && currentWeek.length > 0) {
+    weeks.push(currentWeek);
+    currentWeek = [];
+  }
+  currentWeek.push(date);
+}
+if (currentWeek.length > 0) {
+  weeks.push(currentWeek);
+}
+
+// Get activity level (0-4)
+function getLevel(count: number): number {
+  if (count === 0) return 0;
+  if (count === 1) return 1;
+  if (count <= 3) return 2;
+  if (count <= 5) return 3;
+  return 4;
+}
+
+const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+---
+
+<div class:list={["activity-graph font-mono", className]}>
+  <!-- Month labels -->
+  <div class="flex gap-1 mb-1 text-xs text-muted-foreground ml-6">
+    {months.slice(today.getMonth() + 1).concat(months.slice(0, today.getMonth() + 1)).map((month, i) => (
+      <span class="w-8" style={i % 2 === 0 ? '' : 'visibility: hidden'}>{month}</span>
+    ))}
+  </div>
+  
+  <div class="flex gap-0.5">
+    <!-- Day labels -->
+    <div class="flex flex-col gap-0.5 text-xs text-muted-foreground mr-1">
+      <span class="h-2.5"></span>
+      <span class="h-2.5 text-[10px]">Mon</span>
+      <span class="h-2.5"></span>
+      <span class="h-2.5 text-[10px]">Wed</span>
+      <span class="h-2.5"></span>
+      <span class="h-2.5 text-[10px]">Fri</span>
+      <span class="h-2.5"></span>
+    </div>
+    
+    <!-- Grid -->
+    <div class="flex gap-0.5">
+      {weeks.map(week => (
+        <div class="flex flex-col gap-0.5">
+          {week.map(date => {
+            const dateStr = date.toISOString().split('T')[0];
+            const count = data[dateStr] || 0;
+            const level = getLevel(count);
+            return (
+              <div 
+                class:list={[
+                  "w-2.5 h-2.5 rounded-sm",
+                  level === 0 && "bg-secondary",
+                  level === 1 && "bg-accent/30",
+                  level === 2 && "bg-accent/50",
+                  level === 3 && "bg-accent/75",
+                  level === 4 && "bg-accent",
+                ]}
+                title={`${dateStr}: ${count} ${count === 1 ? 'contribution' : 'contributions'}`}
+              />
+            );
+          })}
+        </div>
+      ))}
+    </div>
+  </div>
+  
+  <!-- Legend -->
+  <div class="flex items-center gap-2 mt-2 text-xs text-muted-foreground justify-end">
+    <span>Less</span>
+    <div class="flex gap-0.5">
+      <div class="w-2.5 h-2.5 rounded-sm bg-secondary"></div>
+      <div class="w-2.5 h-2.5 rounded-sm bg-accent/30"></div>
+      <div class="w-2.5 h-2.5 rounded-sm bg-accent/50"></div>
+      <div class="w-2.5 h-2.5 rounded-sm bg-accent/75"></div>
+      <div class="w-2.5 h-2.5 rounded-sm bg-accent"></div>
+    </div>
+    <span>More</span>
+  </div>
+</div>

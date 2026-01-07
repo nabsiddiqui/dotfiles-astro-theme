@@ -1,0 +1,105 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import TerminalHeader from '../../components/TerminalHeader.astro';
+import TableOfContents from '../../components/TableOfContents.astro';
+import CopyCode from '../../components/CopyCode.astro';
+import PostNavigation from '../../components/PostNavigation.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import { getCollection } from 'astro:content';
+import { formatDate, getReadingTime, sortPostsByDate, filterDrafts } from '../../lib/utils';
+import { siteConfig } from '../../config';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  const sortedPosts = sortPostsByDate(filterDrafts(posts));
+  
+  return sortedPosts.map((post, index) => ({
+    params: { slug: post.slug },
+    props: { 
+      post,
+      prevPost: sortedPosts[index + 1] || null,
+      nextPost: sortedPosts[index - 1] || null,
+    },
+  }));
+}
+
+const { post, prevPost, nextPost } = Astro.props;
+const { Content, headings } = await post.render();
+
+const formattedDate = formatDate(post.data.date);
+const readingTime = getReadingTime(post.body);
+---
+
+<Layout 
+  title={`${post.data.title} | ${siteConfig.title}`} 
+  description={post.data.description}
+  article={true}
+  publishedTime={post.data.date.toISOString()}
+  tags={post.data.tags}
+>
+  <article class="py-16">
+    <div class="container max-w-3xl mx-auto px-6">
+      <!-- Breadcrumbs -->
+      <Breadcrumbs 
+        items={[
+          { label: 'blog', href: '/blog' },
+          { label: post.slug }
+        ]} 
+        class="mb-6"
+      />
+      
+      <!-- Post Header -->
+      <header class="mb-10">
+        <h1 class="text-3xl md:text-4xl font-bold font-mono mb-4">
+          {post.data.title}
+        </h1>
+        
+        <div class="flex flex-wrap items-center gap-4 text-sm text-muted-foreground font-mono">
+          <time datetime={post.data.date.toISOString()}>{formattedDate}</time>
+          <span>•</span>
+          <span>{readingTime}</span>
+        </div>
+        
+        <div class="flex flex-wrap gap-2 mt-4">
+          {post.data.tags.map(tag => (
+            <a 
+              href={`/tags/${tag}`}
+              class="text-xs font-mono px-2 py-1 bg-secondary rounded text-muted-foreground hover:text-primary transition-colors"
+            >
+              #{tag}
+            </a>
+          ))}
+        </div>
+      </header>
+
+      <!-- Table of Contents -->
+      {headings.length > 2 && (
+        <TableOfContents headings={headings} />
+      )}
+
+      <!-- Post Content -->
+      <div class="prose prose-lg prose-headings:font-mono prose-code:font-mono prose-pre:bg-card prose-pre:border prose-pre:border-border max-w-none">
+        <Content />
+      </div>
+
+      <!-- Post Navigation -->
+      <PostNavigation 
+        prev={prevPost ? { title: prevPost.data.title, slug: prevPost.slug } : undefined}
+        next={nextPost ? { title: nextPost.data.title, slug: nextPost.slug } : undefined}
+      />
+
+      <!-- Post Footer -->
+      <footer class="mt-8 pt-8 border-t flex items-center justify-between">
+        <a href="/blog" class="font-mono text-sm text-muted-foreground hover:text-primary transition-colors">
+          ← all posts
+        </a>
+        <a href="/rss.xml" class="font-mono text-sm text-muted-foreground hover:text-primary transition-colors">
+          [rss]
+        </a>
+      </footer>
+    </div>
+  </article>
+  
+  <!-- Copy Code Script -->
+  <CopyCode />
+</Layout>

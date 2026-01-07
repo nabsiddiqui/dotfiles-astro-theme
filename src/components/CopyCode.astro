@@ -1,0 +1,58 @@
+---
+// Adds copy buttons to code blocks
+---
+
+<script>
+  function initCopyButtons() {
+    // Find all code blocks
+    const codeBlocks = document.querySelectorAll('pre');
+    
+    codeBlocks.forEach((block) => {
+      // Skip if already has button
+      if (block.querySelector('.copy-button')) return;
+      
+      // Create wrapper
+      const wrapper = document.createElement('div');
+      wrapper.className = 'relative group';
+      block.parentNode?.insertBefore(wrapper, block);
+      wrapper.appendChild(block);
+      
+      // Create button
+      const button = document.createElement('button');
+      button.className = 'copy-button absolute top-2 right-2 px-2 py-1 text-xs font-mono bg-secondary text-muted-foreground rounded opacity-0 group-hover:opacity-100 transition-opacity hover:text-primary';
+      button.textContent = '[copy]';
+      button.setAttribute('aria-label', 'Copy code');
+      
+      button.addEventListener('click', async () => {
+        const code = block.querySelector('code')?.textContent || block.textContent || '';
+        
+        try {
+          await navigator.clipboard.writeText(code);
+          button.textContent = '[copied!]';
+          button.classList.add('text-accent');
+          
+          setTimeout(() => {
+            button.textContent = '[copy]';
+            button.classList.remove('text-accent');
+          }, 2000);
+        } catch (err) {
+          button.textContent = '[error]';
+          button.classList.add('text-destructive');
+          
+          setTimeout(() => {
+            button.textContent = '[copy]';
+            button.classList.remove('text-destructive');
+          }, 2000);
+        }
+      });
+      
+      wrapper.appendChild(button);
+    });
+  }
+
+  // Run on initial load
+  initCopyButtons();
+  
+  // Run on view transitions
+  document.addEventListener('astro:after-swap', initCopyButtons);
+</script>

@@ -1,0 +1,182 @@
+---
+import Layout from '../layouts/Layout.astro';
+import TerminalHeader from '../components/TerminalHeader.astro';
+import { siteConfig } from '../config';
+
+const themes = [
+  // Light themes first
+  { id: 'clean-white', name: 'Clean White', type: 'light', primary: '#0066cc', bg: '#ffffff', fg: '#1a1a1a' },
+  { id: 'catppuccin-latte', name: 'Catppuccin Latte', type: 'light', primary: '#8839ef', bg: '#eff1f5', fg: '#4c4f69' },
+  { id: 'rose-pine-dawn', name: 'Rosé Pine Dawn', type: 'light', primary: '#907aa9', bg: '#faf4ed', fg: '#575279' },
+  { id: 'nord-light', name: 'Nord Light', type: 'light', primary: '#5e81ac', bg: '#eceff4', fg: '#2e3440' },
+  { id: 'solarized-light', name: 'Solarized Light', type: 'light', primary: '#268bd2', bg: '#fdf6e3', fg: '#657b83' },
+  { id: 'gruvbox-light', name: 'Gruvbox Light', type: 'light', primary: '#b57614', bg: '#fbf1c7', fg: '#3c3836' },
+  { id: 'tokyo-night-light', name: 'Tokyo Night Light', type: 'light', primary: '#34548a', bg: '#d5d6db', fg: '#343b58' },
+  // Dark themes
+  { id: 'catppuccin-mocha', name: 'Catppuccin Mocha', type: 'dark', primary: '#cba6f7', bg: '#1e1e2e', fg: '#cdd6f4' },
+  { id: 'rose-pine', name: 'Rosé Pine', type: 'dark', primary: '#c4a7e7', bg: '#191724', fg: '#e0def4' },
+  { id: 'nord', name: 'Nord', type: 'dark', primary: '#88c0d0', bg: '#2e3440', fg: '#eceff4' },
+  { id: 'dracula', name: 'Dracula', type: 'dark', primary: '#bd93f9', bg: '#282a36', fg: '#f8f8f2' },
+  { id: 'solarized-dark', name: 'Solarized Dark', type: 'dark', primary: '#268bd2', bg: '#002b36', fg: '#839496' },
+  { id: 'gruvbox-dark', name: 'Gruvbox Dark', type: 'dark', primary: '#fabd2f', bg: '#282828', fg: '#ebdbb2' },
+  { id: 'tokyo-night', name: 'Tokyo Night', type: 'dark', primary: '#7aa2f7', bg: '#1a1b26', fg: '#a9b1d6' },
+];
+
+const lightThemes = themes.filter(t => t.type === 'light');
+const darkThemes = themes.filter(t => t.type === 'dark');
+---
+
+<Layout title={`Themes | ${siteConfig.title}`}>
+  <section class="py-16">
+    <div class="container max-w-5xl mx-auto px-6">
+      <TerminalHeader command="ls ~/.themes/*" size="xl" class="mb-4" />
+      
+      <div class="font-mono text-sm text-muted-foreground mb-10">
+        <span class="terminal-prompt">$</span>
+        <span class="terminal-command ml-2">find . -name "*.theme" | wc -l</span>
+        <p class="mt-2">{themes.length} themes available. Click any theme to preview it.</p>
+      </div>
+
+      <!-- Light Themes -->
+      <h2 class="font-mono text-xl mb-6 flex items-center gap-2">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+        </svg>
+        Light Themes
+      </h2>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-12">
+        {lightThemes.map(theme => (
+          <button
+            class="theme-card group rounded-lg border-2 border-border overflow-hidden transition-all hover:border-primary hover:shadow-lg cursor-pointer text-left"
+            data-theme-id={theme.id}
+            data-theme-type={theme.type}
+          >
+            <div 
+              class="p-4 h-32 flex flex-col justify-between"
+              style={`background: ${theme.bg}; color: ${theme.fg}`}
+            >
+              <div class="font-mono text-sm opacity-70">
+                <span style={`color: ${theme.primary}`}>$</span> echo "Hello, World!"
+              </div>
+              <div>
+                <div class="font-mono font-bold" style={`color: ${theme.primary}`}>{theme.name}</div>
+                <div class="font-mono text-xs opacity-60">{theme.id}</div>
+              </div>
+            </div>
+            <div class="px-4 py-2 bg-card border-t border-border flex items-center justify-between">
+              <span class="text-xs font-mono text-muted-foreground">Light</span>
+              <span class="text-xs font-mono text-primary opacity-0 group-hover:opacity-100 transition-opacity">Apply →</span>
+            </div>
+          </button>
+        ))}
+      </div>
+
+      <!-- Dark Themes -->
+      <h2 class="font-mono text-xl mb-6 flex items-center gap-2">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+        </svg>
+        Dark Themes
+      </h2>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-12">
+        {darkThemes.map(theme => (
+          <button
+            class="theme-card group rounded-lg border-2 border-border overflow-hidden transition-all hover:border-primary hover:shadow-lg cursor-pointer text-left"
+            data-theme-id={theme.id}
+            data-theme-type={theme.type}
+          >
+            <div 
+              class="p-4 h-32 flex flex-col justify-between"
+              style={`background: ${theme.bg}; color: ${theme.fg}`}
+            >
+              <div class="font-mono text-sm opacity-70">
+                <span style={`color: ${theme.primary}`}>$</span> echo "Hello, World!"
+              </div>
+              <div>
+                <div class="font-mono font-bold" style={`color: ${theme.primary}`}>{theme.name}</div>
+                <div class="font-mono text-xs opacity-60">{theme.id}</div>
+              </div>
+            </div>
+            <div class="px-4 py-2 bg-card border-t border-border flex items-center justify-between">
+              <span class="text-xs font-mono text-muted-foreground">Dark</span>
+              <span class="text-xs font-mono text-primary opacity-0 group-hover:opacity-100 transition-opacity">Apply →</span>
+            </div>
+          </button>
+        ))}
+      </div>
+
+      <!-- Usage Instructions -->
+      <div class="terminal-window">
+        <div class="terminal-titlebar">
+          <div class="terminal-buttons">
+            <span class="terminal-button terminal-button-red"></span>
+            <span class="terminal-button terminal-button-yellow"></span>
+            <span class="terminal-button terminal-button-green"></span>
+          </div>
+          <span class="text-sm text-muted-foreground font-mono">config.ts</span>
+        </div>
+        <div class="terminal-content font-mono text-sm">
+          <p class="text-muted-foreground mb-4">// To set a default theme, edit src/config.ts:</p>
+          <pre class="text-foreground"><code>theme: {'{'}
+  defaultTheme: "<span class="text-primary" id="selected-theme-id">clean-white</span>",
+{'}'}</code></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<script>
+  function initThemeShowcase() {
+    const cards = document.querySelectorAll('.theme-card');
+    const selectedThemeDisplay = document.getElementById('selected-theme-id');
+    
+    cards.forEach(card => {
+      card.addEventListener('click', () => {
+        const themeId = (card as HTMLElement).dataset.themeId;
+        const themeType = (card as HTMLElement).dataset.themeType;
+        
+        if (!themeId) return;
+        
+        // Apply theme
+        const root = document.documentElement;
+        root.setAttribute('data-theme', themeId);
+        
+        // Toggle dark class
+        if (themeType === 'dark') {
+          root.classList.add('dark');
+        } else {
+          root.classList.remove('dark');
+        }
+        
+        // Save to localStorage
+        localStorage.setItem('theme', themeId);
+        
+        // Update code display
+        if (selectedThemeDisplay) {
+          selectedThemeDisplay.textContent = themeId;
+        }
+        
+        // Update card states
+        cards.forEach(c => c.classList.remove('ring-2', 'ring-primary'));
+        card.classList.add('ring-2', 'ring-primary');
+      });
+    });
+    
+    // Highlight current theme
+    const currentTheme = localStorage.getItem('theme') || 'clean-white';
+    cards.forEach(card => {
+      if ((card as HTMLElement).dataset.themeId === currentTheme) {
+        card.classList.add('ring-2', 'ring-primary');
+      }
+    });
+    if (selectedThemeDisplay) {
+      selectedThemeDisplay.textContent = currentTheme;
+    }
+  }
+  
+  initThemeShowcase();
+  document.addEventListener('astro:after-swap', initThemeShowcase);
+</script>

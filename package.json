@@ -1,0 +1,35 @@
+{
+  "name": "dotfiles-astro-theme",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "A blog theme with terminal vibes and 14 color schemes",
+  "author": "Nabeel Siddiqui <nabeel@nabeelsiddiqui.net>",
+  "license": "MIT",
+  "keywords": [
+    "astro",
+    "theme",
+    "terminal",
+    "blog",
+    "portfolio",
+    "dotfiles"
+  ],
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/mdx": "^4.3.13",
+    "@astrojs/rss": "^4.0.14",
+    "@astrojs/sitemap": "^3.6.0",
+    "astro": "^5.1.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/typography": "^0.5.16",
+    "@tailwindcss/vite": "^4.0.0",
+    "tailwindcss": "^4.0.0",
+    "typescript": "^5.7.2"
+  }
+}

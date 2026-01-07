@@ -1,0 +1,33 @@
+---
+import { siteConfig } from '../config';
+
+const currentYear = new Date().getFullYear();
+const copyright = siteConfig.footer.copyright.replace('%YEAR%', currentYear.toString());
+const social = siteConfig.social;
+---
+
+<footer class="border-t bg-card/50">
+  <div class="container max-w-5xl mx-auto px-4 sm:px-6 py-8">
+    <div class="flex flex-col md:flex-row items-center justify-between gap-4 font-mono text-sm">
+      <div class="status-bar">
+        <span class="status-dot status-dot-green"></span>
+        <span class="text-muted-foreground">{siteConfig.footer.statusMessage.toLowerCase()}</span>
+      </div>
+
+      {siteConfig.footer.showSocialLinks && (
+        <div class="flex items-center gap-4 text-muted-foreground">
+          {social.github && <a href={social.github} class="hover:text-primary transition-colors">[github]</a>}
+          {social.twitter && <a href={social.twitter} class="hover:text-primary transition-colors">[twitter]</a>}
+          {social.bluesky && <a href={social.bluesky} class="hover:text-primary transition-colors">[bluesky]</a>}
+          {social.mastodon && <a href={social.mastodon} class="hover:text-primary transition-colors">[mastodon]</a>}
+          {social.linkedin && <a href={social.linkedin} class="hover:text-primary transition-colors">[linkedin]</a>}
+          {social.rss && <a href={social.rss} class="hover:text-primary transition-colors">[rss]</a>}
+        </div>
+      )}
+
+      <p class="text-muted-foreground">
+        {copyright}
+      </p>
+    </div>
+  </div>
+</footer>

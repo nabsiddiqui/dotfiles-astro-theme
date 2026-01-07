@@ -1,0 +1,62 @@
+---
+import Layout from '../layouts/Layout.astro';
+import TerminalHeader from '../components/TerminalHeader.astro';
+import BlogCard from '../components/BlogCard.astro';
+import { getCollection } from 'astro:content';
+import { sortPostsByDate, filterDrafts, getUniqueTags } from '../lib/utils';
+import { siteConfig } from '../config';
+
+// Get all posts from content collection
+const allPosts = await getCollection('blog');
+const posts = sortPostsByDate(filterDrafts(allPosts));
+const tags = getUniqueTags(posts);
+---
+
+<Layout title={`Blog | ${siteConfig.title}`}>
+  <section class="py-16">
+    <div class="container max-w-4xl mx-auto px-6">
+      <TerminalHeader command="find . -name '*.md' -type f" size="xl" class="mb-4" />
+      
+      <div class="font-mono text-sm text-muted-foreground mb-10">
+        <span class="terminal-prompt">$</span>
+        <span class="terminal-command ml-2">wc -l ./posts/* | tail -1</span>
+        <p class="mt-2">
+          {posts.length} posts found. 
+          <a href="/rss.xml" class="text-primary hover:underline ml-2">[rss]</a>
+          <a href="/archives" class="text-primary hover:underline ml-2">[archives]</a>
+        </p>
+      </div>
+
+      <!-- All Posts -->
+      <div class="grid gap-6">
+        {posts.map(post => (
+          <BlogCard 
+            title={post.data.title}
+            description={post.data.description}
+            date={post.data.date.toISOString()}
+            slug={post.slug}
+            tags={post.data.tags}
+          />
+        ))}
+      </div>
+
+      <!-- Tags filter -->
+      <div class="mt-10 pt-6 border-t">
+        <div class="font-mono text-sm text-muted-foreground mb-3">
+          <span class="terminal-prompt">$</span>
+          <span class="terminal-command ml-2">grep -r "tag:" ./posts/* | cut -d: -f2 | sort -u</span>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          {tags.map(tag => (
+            <a 
+              href={`/tags/${tag}`} 
+              class="text-xs font-mono px-2 py-1 bg-secondary rounded text-muted-foreground hover:text-primary transition-colors"
+            >
+              #{tag}
+            </a>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>

@@ -1,0 +1,125 @@
+---
+// Site header with terminal-style nav
+// Pages from src/content/pages/ are auto-added
+import ThemeSwitcher from './ThemeSwitcher.astro';
+import { siteConfig } from '../config';
+import { getCollection } from 'astro:content';
+
+interface Props {
+  currentPath?: string;
+}
+
+const { currentPath = '/' } = Astro.props;
+
+const pages = await getCollection('pages');
+
+// Pages show in nav by default, unless hideFromNav: true in frontmatter
+const pageNavItems = pages
+  .filter(page => !page.data.hideFromNav)
+  .sort((a, b) => a.data.title.localeCompare(b.data.title))
+  .map(page => ({ 
+    href: `/${page.slug}`, 
+    label: page.data.title.toLowerCase() 
+  }));
+
+const navItems = [
+  { href: "/", label: "home" },
+  ...siteConfig.header.coreNav.map(item => ({ 
+    href: item.href, 
+    label: item.text.toLowerCase() 
+  })),
+  ...pageNavItems,
+  { href: "/search", label: "search" },
+];
+---
+
+<header class="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+  <div class="container max-w-5xl mx-auto px-4 sm:px-6 flex h-14 items-center justify-between">
+    <!-- Terminal Prompt Logo -->
+    <div class="flex items-center font-mono">
+      <a href="/" class="flex items-center gap-2 hover:text-primary transition-colors">
+        <span class="text-primary">~</span>
+        <span class="font-semibold">/{siteConfig.title.toLowerCase()}</span>
+      </a>
+    </div>
+
+    <!-- Desktop Navigation - Bracketed -->
+    <nav class="hidden md:flex items-center gap-1 text-base font-mono">
+      {navItems.map((item) => (
+        <a
+          href={item.href}
+          class:list={[
+            "px-2 py-1.5 rounded transition-all hover:bg-primary/10 hover:text-primary",
+            currentPath === item.href || currentPath.startsWith(item.href + '/') ? "text-primary" : "text-muted-foreground"
+          ]}
+        >
+          [{item.label}]
+        </a>
+      ))}
+    </nav>
+
+    <!-- Desktop Actions -->
+    <div class="hidden md:flex items-center gap-2">
+      {siteConfig.demo.enabled && (
+        <a href="/themes" class="font-mono text-sm text-muted-foreground hover:text-primary transition-colors">
+          [themes]
+        </a>
+      )}
+      {(siteConfig.header.showThemeSwitcher || siteConfig.demo.enabled) && <ThemeSwitcher />}
+    </div>
+
+    <!-- Mobile Menu Button -->
+    <div class="flex md:hidden items-center gap-2">
+      <a href="/search" class="font-mono text-sm text-muted-foreground hover:text-primary transition-colors">
+        [🔍]
+      </a>
+      <button
+        id="mobile-menu-button"
+        class="inline-flex items-center justify-center rounded-md p-2 hover:bg-card hover:text-primary focus:outline-none font-mono text-sm"
+        aria-expanded="false"
+        aria-label="Toggle menu"
+      >
+        [menu]
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Navigation -->
+  <div id="mobile-menu" class="hidden md:hidden border-t bg-background">
+    <nav class="container max-w-5xl mx-auto px-4 py-4 flex flex-col gap-2 font-mono">
+      {navItems.map((item) => (
+        <a
+          href={item.href}
+          class:list={[
+            "px-2 py-2 rounded transition-all hover:bg-primary/10 hover:text-primary",
+            currentPath === item.href ? "text-primary" : "text-muted-foreground"
+          ]}
+        >
+          [{item.label}]
+        </a>
+      ))}
+      <hr class="my-2 border-border" />
+      <a href="/archives" class="px-2 py-2 rounded transition-all hover:bg-primary/10 text-muted-foreground hover:text-primary">
+        [archives]
+      </a>
+      <a href="/rss.xml" class="px-2 py-2 rounded transition-all hover:bg-primary/10 text-muted-foreground hover:text-primary">
+        [rss]
+      </a>
+      {siteConfig.demo.enabled && (
+        <a href="/themes" class="px-2 py-2 rounded transition-all hover:bg-primary/10 text-muted-foreground hover:text-primary">
+          [themes]
+        </a>
+      )}
+    </nav>
+  </div>
+</header>
+
+<script>
+  const button = document.getElementById('mobile-menu-button');
+  const menu = document.getElementById('mobile-menu');
+  
+  button?.addEventListener('click', () => {
+    const isHidden = menu?.classList.toggle('hidden');
+    button.setAttribute('aria-expanded', String(!isHidden));
+  });
+</script>
