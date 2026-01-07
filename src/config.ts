@@ -130,9 +130,9 @@ export const siteConfig = {
     pageTransitions: true,
   },
 
-  // For the demo site only - you probably want this false
+  // Set to true to show theme switcher for demo purposes
   demo: {
-    enabled: true,
+    enabled: false,
   },
 };
 
