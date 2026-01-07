@@ -45,12 +45,12 @@ const darkThemes = themes.filter(t => t.type === 'dark');
   
   <div id="theme-menu" class="hidden absolute right-0 mt-2 py-2 bg-card border border-border rounded-lg shadow-lg z-50 min-w-[200px] max-h-[400px] overflow-y-auto">
     <!-- Light Themes First -->
-    <div class="px-3 py-1.5 text-xs font-mono text-foreground uppercase tracking-wide opacity-60">
+    <div class="px-3 py-1.5 text-xs font-mono text-card-foreground uppercase tracking-wide opacity-60">
       Light Themes
     </div>
     {lightThemes.map(theme => (
       <button 
-        class="theme-option w-full px-4 py-2 text-left font-mono text-sm text-foreground hover:bg-secondary transition-colors flex items-center gap-3"
+        class="theme-option w-full px-4 py-2 text-left font-mono text-sm text-card-foreground hover:bg-secondary transition-colors flex items-center gap-3"
         data-theme={theme.id}
         data-type={theme.type}
       >
@@ -62,12 +62,12 @@ const darkThemes = themes.filter(t => t.type === 'dark');
     <hr class="my-2 border-border" />
     
     <!-- Dark Themes -->
-    <div class="px-3 py-1.5 text-xs font-mono text-foreground uppercase tracking-wide opacity-60">
+    <div class="px-3 py-1.5 text-xs font-mono text-card-foreground uppercase tracking-wide opacity-60">
       Dark Themes
     </div>
     {darkThemes.map(theme => (
       <button 
-        class="theme-option w-full px-4 py-2 text-left font-mono text-sm text-foreground hover:bg-secondary transition-colors flex items-center gap-3"
+        class="theme-option w-full px-4 py-2 text-left font-mono text-sm text-card-foreground hover:bg-secondary transition-colors flex items-center gap-3"
         data-theme={theme.id}
         data-type={theme.type}
       >
