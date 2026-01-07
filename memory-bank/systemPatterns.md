@@ -1,118 +1,162 @@
-# System Patterns: Dotfiles Astro Theme
+# System Patterns
 
-## Architecture
-Static Astro theme with Tailwind v4, TypeScript, centralized config.
+## Configuration Architecture
 
-## Key Patterns
-
-### 1. Centralized Config
-Everything in `src/config.ts`:
+### Single Config File
+All settings in `src/config.ts`:
 ```typescript
 export const siteConfig = {
-  title, description, author, siteUrl,
+  site: { title, description, author, email, url },
+  theme: { defaultTheme: 'clean-white' },
   header: { coreNav, showThemeSwitcher },
-  hero: { title, typewriterLines, description, ctaButtons },
-  theme: { defaultTheme },
-  social: { github, twitter, ... },
-  seo: { ogImage, twitterCard, twitterHandle },
-  // ... more
-};
+  blog: { postsPerPage, showTableOfContents },
+  projects: { projectsPerPage },
+  features: { commandPalette, search, rss, sitemap, pageTransitions },
+  demo: { enabled: import.meta.env.PUBLIC_ENABLE_DEMO === 'true' || false }
+}
 ```
 
-### 2. Auto-Imported Components
-Page renderer injects components for MDX:
-```astro
-// src/pages/[...slug].astro
-const components = { Terminal };
-<Content components={components} />
+Users configure everything in one place. No hunting through multiple files.
+
+### Navigation System
+Pages auto-appear in nav by default. To hide a page from nav:
+```typescript
+hideFromNav: true  // in frontmatter
 ```
 
-Users just write `<Terminal>` - no import needed.
+No `navOrder` needed - pages sort alphabetically. Clean and simple.
 
-### 3. Terminal Component
-```astro
-// src/components/Terminal.astro
-<div class="terminal-window">
-  <div class="terminal-titlebar">...</div>
-  <div class="terminal-content prose prose-terminal">
-    <slot />  <!-- Markdown works here -->
-  </div>
-</div>
-```
+### Content Collections
+Two collections:
 
-### 4. SEO (Automatic)
-`SEO.astro` generates all meta tags from props:
-```astro
-<SEO 
-  title={title}
-  description={description}
-  image={ogImage}
-  article={isPost}
-/>
-```
-
-Outputs: meta tags, Open Graph, Twitter Cards, canonical URL, RSS link.
-
-### 5. Page Schema (Minimal)
+**blog/** - Posts with .md
 ```yaml
----
-title: "Page Title"
-description: "Optional"
-hideFromNav: true  # Optional, default false
----
+title, description, date, tags[], draft
 ```
 
-No `style`, `layout`, or `navOrder` - just content.
-
-### 6. Navigation
-Header builds nav from:
-1. Home (fixed)
-2. `siteConfig.header.coreNav` (Blog, Projects)
-3. Pages collection (filtered by `hideFromNav`, sorted alphabetically)
-4. Search (fixed)
-
-### 7. Theme System
-CSS variables in `globals.css`:
-```css
-@theme { --color-background: #fff; }
-[data-theme="nord"] { --color-background: #2e3440; }
-```
-
-Default theme from config, user choice in localStorage.
-
-### 8. Demo Mode
-`demo.enabled: true` shows theme switcher for demo sites.
-Production users set it to `false`.
-
-## File Structure
-```
-src/
-├── config.ts              # All configuration
-├── content/
-│   ├── blog/              # Markdown posts
-│   └── pages/             # MDX pages
-├── components/
-│   ├── Terminal.astro     # Terminal wrapper (auto-imported)
-│   ├── SEO.astro          # Meta tags
-│   └── ...                # 16 more components
-├── pages/
-│   └── [...slug].astro    # Page renderer
-└── styles/globals.css     # Themes
+**pages/** - MDX pages with components
+```yaml
+title, description, hideFromNav
 ```
 
 ## Component Patterns
 
-### Props with Defaults
-```astro
----
-interface Props { title?: string; }
-const { title = "terminal" } = Astro.props;
----
+### Terminal Wrapper
+Auto-imported globally in `astro.config.mjs`:
+```javascript
+components: { Terminal: './src/components/Terminal.astro' }
 ```
 
-### Server-to-Client
-```astro
-<script is:inline data-theme={defaultTheme}>
-  const theme = document.currentScript.getAttribute('data-theme');
-</script>
+Users write:
+```mdx
+<Terminal title="~">
+## This is markdown
+Works seamlessly
+</Terminal>
 ```
+
+No manual imports needed.
+
+### SEO Component
+Automatic meta tags, no user config:
+```astro
+<SEO {title} {description} {article} />
+```
+
+Generates: OG tags, Twitter cards, canonical URLs, JSON-LD.
+
+## Theme System
+
+### 14 Color Palettes
+Defined in `globals.css` using `@theme` directive and `data-theme` attributes:
+- Light: clean-white, catppuccin-latte, rose-pine-dawn, nord-light, solarized-light, gruvbox-light, tokyo-night-light
+- Dark: catppuccin-mocha, rose-pine, nord, dracula, solarized-dark, gruvbox-dark, tokyo-night
+
+### Demo Mode (Dual Deployment)
+**GitHub version** (users cloning repo):
+```typescript
+demo: { enabled: false }  // No env var, defaults to false
+```
+
+**Netlify version** (showcase site):
+```toml
+# netlify.toml
+[context.production.environment]
+  PUBLIC_ENABLE_DEMO = "true"
+```
+```typescript
+demo: { enabled: true }  // Env var set, switcher shows
+```
+
+Single codebase, two outputs. GitHub users get production-ready theme, Netlify demo showcases all features.
+
+### Theme Persistence
+```javascript
+localStorage.setItem('theme', themeName)
+```
+Saved client-side, loads on page refresh.
+
+### Theme Switcher Visibility
+Fixed with inline styles to ensure text visibility across all themes:
+```html
+<div style="color: var(--color-card-foreground);">
+  <!-- Theme names always visible -->
+</div>
+```
+
+Hover uses opacity change instead of background color change:
+```html
+<button class="hover:opacity-80" style="background: transparent;">
+```
+
+## Markdown Features
+
+### Code Blocks
+Syntax highlighting via Astro's Shiki integration. Terminal blocks:
+```bash
+npm install dotfiles-astro-theme
+```
+
+### Typography
+Prose classes from `@tailwindcss/typography`:
+```html
+<div class="prose dark:prose-invert">
+  <!-- User markdown -->
+</div>
+```
+
+## Build Process
+
+### Static Site Generation
+Astro builds to `dist/`:
+- 28 pages
+- ~800ms build time
+- RSS feed, sitemap auto-generated
+
+### Deployment
+**Netlify**:
+- Auto-deploy on push via GitHub integration
+- Build command: `npm run build`
+- Environment: `PUBLIC_ENABLE_DEMO=true`
+
+**GitHub**:
+- Public repo
+- Users clone and customize
+- Environment: No env vars (demo disabled)
+
+## File Structure
+```
+src/
+  config.ts          ← Single source of truth
+  components/        ← 18 reusable components
+  content/
+    blog/           ← Markdown posts
+    pages/          ← MDX pages
+  layouts/
+    Layout.astro    ← Base layout
+  pages/            ← Route pages
+  styles/
+    globals.css     ← 14 theme definitions
+```
+
+Everything is intentional. No magic, no hidden config.
