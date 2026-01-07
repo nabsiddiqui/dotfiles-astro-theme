@@ -2,6 +2,8 @@
 
 A terminal-inspired blog theme for Astro with 14 developer-favorite color palettes.
 
+**[View Live Demo →](https://dotfiles-astro-theme.netlify.app)**
+
 ![Dotfiles Theme](https://raw.githubusercontent.com/nabsiddiqui/dotfiles-astro-theme/main/public/screenshots/hero.png)
 
 ## Features
