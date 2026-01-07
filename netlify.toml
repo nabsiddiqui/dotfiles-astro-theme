@@ -1,0 +1,10 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[context.production.environment]
+  # Enable demo mode for the showcase site
+  ENABLE_DEMO = "true"
+
+[context.deploy-preview.environment]
+  ENABLE_DEMO = "true"

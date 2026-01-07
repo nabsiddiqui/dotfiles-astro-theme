@@ -1,87 +1,66 @@
 # Progress
 
-## Current Status: Ready for Distribution 🚀
+## Current Status: Deployed & Ready for Submission 🚀
 
-Theme complete. Just needs: deploy → screenshot → submit.
+Live demo at Netlify, code on GitHub. Just needs screenshot + Astro portal submission.
 
 ## Completed Features ✅
 
-### Core Infrastructure
-- [x] Astro 5.1.1 + Tailwind v4 + TypeScript
-- [x] Centralized config (`src/config.ts`)
-- [x] Memory Bank documentation
-
-### Content System
-- [x] Blog collection (markdown posts)
-- [x] Pages collection (MDX)
-- [x] Dynamic page routing
-- [x] Auto-navigation from pages
-- [x] **Terminal component auto-imported**
-- [x] **Markdown inside Terminal**
-
-### SEO (Automatic)
-- [x] Meta tags (title, description)
-- [x] Open Graph (Facebook, LinkedIn)
-- [x] Twitter Cards
-- [x] Canonical URLs
-- [x] RSS discovery
-- [x] Sitemap
-
-### Pages Built
-- [x] Home, Blog, Projects, Search, Archives, 404
-- [x] Theme showcase (/themes)
-- [x] Dynamic pages from collection
-
-### Components (18)
-- [x] Header, Footer, Layout, SEO
-- [x] **Terminal** (auto-imported wrapper)
-- [x] TerminalHeader, BlogCard, ProjectCard
-- [x] TableOfContents, CopyCode, TypingText
-- [x] ThemeSwitcher, CommandPalette, SocialLinks
-- [x] Breadcrumbs, ActivityGraph, FeaturedPost, PostNavigation
-
-### Theme System (14 themes)
-Clean White (default), Catppuccin, Nord, Dracula, Rosé Pine, Gruvbox, Solarized, Tokyo Night (light & dark variants)
-
-### Code Quality
-- [x] Natural comments
-- [x] No `as const` clutter
-- [x] Simplified page schema
-
-### Documentation
+### Distribution Setup
+- [x] GitHub repo created (public)
+- [x] Netlify deployment (live demo)
+- [x] Demo mode configured (OFF by default, ON for showcase)
 - [x] README with install guide
-- [x] SUBMISSION_INFO for Astro portal
-- [x] Memory Bank current
+- [x] SUBMISSION_INFO with Astro portal steps
 
-## Build Status
-- **Pages**: 28
-- **Build Time**: ~850ms
-- **Errors**: None
+### Core Features
+- [x] 14 color themes
+- [x] Unified config system
+- [x] Blog posts (markdown)
+- [x] Pages (MDX with auto Terminal)
+- [x] SEO (automatic)
+- [x] RSS, Sitemap, Search
+- [x] Terminal component (auto-imported)
+- [x] 18 components
+- [x] Memory Bank docs
 
-## Session History
-
-### Session 9 - Final Polish
-- ✅ Terminal component created
-- ✅ Auto-import in MDX pages
-- ✅ Markdown inside Terminal
-- ✅ Removed page `style` field
-- ✅ Comment cleanup
-- ✅ Documentation complete
-
-### Previous Sessions
-- Session 8: Pages collection, MDX support
-- Session 7: Unified config system
-- Session 6: Hero, themes, terminal styling
+### Deployment
+- [x] GitHub: [github.com/nabsiddiqui/dotfiles-astro-theme](https://github.com/nabsiddiqui/dotfiles-astro-theme)
+- [x] Netlify: [dotfiles-astro-theme.netlify.app](https://dotfiles-astro-theme.netlify.app)
 
 ## What's Left
 
-### Distribution (Do Now)
-- [ ] Deploy demo site
-- [ ] Take screenshot
-- [ ] Submit to portal.astro.build
+### Astro Portal Submission
+- [ ] Take screenshot (1200×630px)
+- [ ] Go to portal.astro.build
+- [ ] Fill form, upload screenshot
+- [ ] Wait for approval
 
-### Future Ideas
-- [ ] Reading progress bar
-- [ ] Share buttons
-- [ ] Comments (giscus)
-- [ ] PWA support
+## Session History
+
+### Session 9 - Deployment & GitHub
+- ✅ GitHub CLI setup + authentication
+- ✅ Repo created and pushed
+- ✅ Netlify CLI setup + authentication
+- ✅ Production deployment
+- ✅ Demo mode: OFF by default, ON for showcase
+- ✅ Memory bank updated
+
+### Previous Sessions
+- Session 8: Terminal component, auto-import, markdown inside Terminal
+- Session 7: Unified config, pages collection
+- Session 6: 14 themes, comment cleanup
+
+## URLs
+
+| Platform | URL | Demo Mode |
+|----------|-----|-----------|
+| GitHub | https://github.com/nabsiddiqui/dotfiles-astro-theme | OFF (default) |
+| Netlify | https://dotfiles-astro-theme.netlify.app | ON (showcase) |
+| Portal | https://portal.astro.build/themes/submit | - |
+
+## Build Stats
+- **Pages**: 28
+- **Build Time**: ~800ms
+- **Themes**: 14
+- **Components**: 18

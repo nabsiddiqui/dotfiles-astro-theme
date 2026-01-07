@@ -43,7 +43,7 @@ Make sure the repo is **public**.
 
 Requirements:
 - **Size**: 1200×630px (or similar 1.91:1 ratio)
-- **Format**: PNG or WebP
+- **Format**: PNG or Webe
 - **Content**: Homepage showing the theme in action
 
 Tips:
