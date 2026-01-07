@@ -2,7 +2,7 @@
 
 A terminal-inspired blog theme for Astro with 14 developer-favorite color palettes.
 
-![Dotfiles Theme](https://placehold.co/1200x600/1e1e2e/cdd6f4?text=Dotfiles+Theme)
+![Dotfiles Theme](https://raw.githubusercontent.com/nabsiddiqui/dotfiles-astro-theme/main/public/screenshots/hero.png)
 
 ## Features
 
